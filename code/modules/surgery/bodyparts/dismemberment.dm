@@ -31,7 +31,7 @@
 		playsound(limb_owner, 'sound/effects/blobattack.ogg', 60, TRUE)
 		limb_owner.blood_volume -= 60 //Makes for 120 when you regenerate it. monkeedit it actually it costs 100 limbs are 40 right now.
 
-	drop_limb()
+	drop_limb(dismembered = TRUE)
 
 	limb_owner.update_equipment_speed_mods() // Update in case speed affecting item unequipped by dismemberment
 	var/turf/owner_location = limb_owner.loc
