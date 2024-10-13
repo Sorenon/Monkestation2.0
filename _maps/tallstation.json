@@ -1,0 +1,49 @@
+{
+	"version": 1,
+	"map_name": "Tall Station",
+	"map_path": "map_files/TallStation",
+	"map_file": "TallStation.dmm",
+	"ignored_unit_tests": [
+		"/datum/unit_test/required_map_items"
+	],
+	"traits": [
+		{
+			"Up": true,
+			"Baseturf": "/turf/open/openspace",
+			"Linkage": null,
+			"Gravity": true,
+			"No Parallax": true
+		},
+		{
+			"Up": true,
+			"Down": true,
+			"Baseturf": "/turf/open/openspace",
+			"Linkage": null,
+			"Gravity": true,
+			"No Parallax": true
+		},
+		{
+			"Up": true,
+			"Down": true,
+			"Baseturf": "/turf/open/openspace",
+			"Linkage": null,
+			"Gravity": true,
+			"No Parallax": true
+		},
+		{
+			"Up": true,
+			"Down": true,
+			"Baseturf": "/turf/open/openspace",
+			"Linkage": null,
+			"Gravity": true,
+			"No Parallax": true
+		},
+		{
+			"Down": true,
+			"Baseturf": "/turf/open/openspace",
+			"Linkage": null,
+			"Gravity": true,
+			"No Parallax": true
+		}
+	]
+}
