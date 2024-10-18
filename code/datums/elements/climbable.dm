@@ -67,6 +67,8 @@
 		adjusted_climb_time *= 0.25 //aliens are terrifyingly fast
 	if(HAS_TRAIT(user, TRAIT_FREERUNNING)) //do you have any idea how fast I am???
 		adjusted_climb_time *= 0.8
+	// if(HAS_TRAIT(user, TRAIT_FEEBLE)) //do you have any idea how slow I am???
+	// 	adjusted_climb_time *= 2
 	//monkestation edit - CYBERNETICS
 	if(HAS_TRAIT(user,TRAIT_FAST_CLIMBER)) //How it feels to chew 5 gum
 		adjusted_climb_time *= 0.3

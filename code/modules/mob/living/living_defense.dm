@@ -213,6 +213,11 @@
 			return
 		if(body_position == LYING_DOWN) // physics says it's significantly harder to push someone by constantly chucking random furniture at them if they are down on the floor.
 			hitpush = FALSE
+		else if (HAS_TRAIT(src, TRAIT_FEEBLE) && thrown_item.w_class > WEIGHT_CLASS_SMALL)
+			src.Paralyze(1 SECONDS)
+			src.Knockdown(4 SECONDS)
+			src.emote("scream")
+
 		return ..()
 
 	playsound(loc, 'sound/weapons/genhit.ogg', 50, TRUE, -1) //Item sounds are handled in the item itself

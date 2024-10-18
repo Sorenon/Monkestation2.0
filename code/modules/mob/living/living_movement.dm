@@ -97,20 +97,41 @@
 	SEND_SIGNAL(src, COMSIG_LIVING_UPDATING_PULL_MOVESPEED)
 
 	if(pulling)
+		// if (HAS_TRAIT(user, TRAIT_FEEBLE))
 		if(isliving(pulling))
 			var/mob/living/L = pulling
-			if(!slowed_by_drag || L.body_position == STANDING_UP || L.buckled || grab_state >= GRAB_AGGRESSIVE)
+			if(!slowed_by_drag || L.body_position == STANDING_UP)
 				remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
 				return
-			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN)
+			if (L.buckled || grab_state >= GRAB_AGGRESSIVE)
+				add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN)
+				return
+			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN * 2)
 			return
 		if(isobj(pulling))
 			var/obj/structure/S = pulling
 			if(!slowed_by_drag || !S.drag_slowdown)
+				if (S.has_buckled_mobs())
+					add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN)
+					return
 				remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
 				return
-			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = S.drag_slowdown)
+			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = S.drag_slowdown * 2)
 			return
+		// if(isliving(pulling))
+		// 	var/mob/living/L = pulling
+		// 	if(!slowed_by_drag || L.body_position == STANDING_UP || L.buckled || grab_state >= GRAB_AGGRESSIVE)
+		// 		remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
+		// 		return
+		// 	add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN)
+		// 	return
+		// if(isobj(pulling))
+		// 	var/obj/structure/S = pulling
+		// 	if(!slowed_by_drag || !S.drag_slowdown)
+		// 		remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
+		// 		return
+		// 	add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = S.drag_slowdown)
+		// 	return
 	remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
 
 /**

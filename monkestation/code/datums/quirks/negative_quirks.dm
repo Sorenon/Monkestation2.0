@@ -240,3 +240,46 @@
 */
 /datum/quirk/tunnel_vision/remove()
 	quirk_holder.remove_fov_trait("tunnel vision quirk")
+
+/datum/quirk/feeble
+	name = "Feeble"
+	desc = "Everything hurts. You feel like a strong gust of wind could knock you over."
+	mob_trait = TRAIT_FEEBLE
+	value = -10
+	icon = FA_ICON_BONE
+	gain_text = span_notice("Everything hurts.")
+	lose_text = span_notice("Life feels bearable.")
+	medical_record_text = "Patient is just a mess."
+
+/datum/movespeed_modifier/feeble_trait
+	multiplicative_slowdown = 0.5
+
+/datum/actionspeed_modifier/feeble_trait
+	multiplicative_slowdown = 2
+
+/datum/quirk/feeble/add()
+	quirk_holder.add_movespeed_modifier(/datum/movespeed_modifier/feeble_trait)
+	quirk_holder.add_actionspeed_modifier(/datum/actionspeed_modifier/feeble_trait)
+
+/datum/quirk/feeble/remove()
+	quirk_holder.remove_movespeed_modifier(/datum/movespeed_modifier/feeble_trait)
+	quirk_holder.remove_actionspeed_modifier(/datum/actionspeed_modifier/feeble_trait)
+
+/proc/feeble_trait_wound_chest(mob/living/carbon/M, message)
+	var/obj/item/bodypart/chest = M.get_bodypart(BODY_ZONE_CHEST)
+	if(locate(/datum/wound/blunt/bone/critical) in chest.wounds)
+		playsound(M, 'sound/effects/wounds/crack2.ogg', 70 + (20 * 3), TRUE)
+	else if(locate(/datum/wound/blunt/bone/severe) in chest.wounds)
+		chest.force_wound_upwards(/datum/wound/blunt/bone/critical, FALSE, "feeble")
+	else if(locate(/datum/wound/blunt/bone/rib_break) in chest.wounds)
+		chest.force_wound_upwards(/datum/wound/blunt/bone/severe, FALSE, "feeble")
+	else
+		chest.force_wound_upwards(/datum/wound/blunt/bone/rib_break, FALSE, "feeble")
+	chest.receive_damage(brute = 15)
+
+/proc/feeble_trait_slow_interact(mob/living/carbon/M, action, atom)
+	if(!HAS_TRAIT(M, TRAIT_FEEBLE))
+		return FALSE
+	M.visible_message(span_notice("[M] strugles to [action]."), \
+			span_notice("You struggle to [action]."))
+	return !do_after(M, 4 SECONDS, target = atom)

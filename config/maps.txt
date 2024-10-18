@@ -50,6 +50,7 @@ endmap
 #endmap
 
 map runtimestation
+	default
 endmap
 
 map multiz_debug

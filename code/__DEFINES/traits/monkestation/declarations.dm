@@ -79,6 +79,7 @@
 // Traits given by quirks
 #define TRAIT_ANIME				"anime"
 #define TRAIT_CAT				"cat"
+#define TRAIT_FEEBLE            "feeble"
 #define TRAIT_GOURMAND			"gourmand"
 #define TRAIT_HIDDEN_CLOWN		"clown_disbelief"
 #define TRAIT_HIDDEN_IMAGE		"generic-hidden-image"
@@ -90,7 +91,6 @@
 #define TRAIT_STABLE_ASS		"stable_ass"
 #define TRAIT_STOWAWAY			"stowaway"
 #define TRAIT_UNSTABLE_ASS		"unstable_ass"
-
 
 // Traits given by station traits
 /// Station trait for when the clown has bridge access *shudders*

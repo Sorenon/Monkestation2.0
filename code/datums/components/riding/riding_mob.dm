@@ -207,6 +207,15 @@
 	else if(ride_check_flags & CARRIER_NEEDS_ARM) // fireman
 		human_parent.buckle_lying = 90
 
+	if (HAS_TRAIT(human_parent, TRAIT_FEEBLE))
+		human_parent.Paralyze(1 SECONDS)
+		human_parent.Knockdown(4 SECONDS)
+		human_parent.emote("scream")
+		human_parent.adjustBruteLoss(15)
+		human_parent.visible_message(span_danger("The weight of [riding_mob] is too much for [human_parent]."), \
+				span_userdanger("The weight of [riding_mob] is too much. You are crushed beneath [riding_mob.p_them()]."))
+
+
 /datum/component/riding/creature/human/RegisterWithParent()
 	. = ..()
 	RegisterSignal(parent, COMSIG_HUMAN_EARLY_UNARMED_ATTACK, PROC_REF(on_host_unarmed_melee))

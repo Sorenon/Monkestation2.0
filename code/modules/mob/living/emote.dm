@@ -292,6 +292,12 @@
 	return tongue?.get_laugh_sound(user)
 // MonkeStation Edit End
 
+/datum/emote/living/laugh/run_emote(mob/user, params, type_override, intentional = FALSE)
+	. = ..()
+	if(istype(user, /mob/living/carbon) && HAS_TRAIT(user, TRAIT_FEEBLE) && rand() >= 0.3)
+		feeble_trait_wound_chest(user)
+	return
+
 /datum/emote/living/look
 	key = "look"
 	key_third_person = "looks"

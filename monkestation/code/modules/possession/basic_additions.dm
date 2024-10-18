@@ -85,7 +85,7 @@
 		if(!directional_blocked && SEND_SIGNAL(target_shove_turf, COMSIG_CARBON_DISARM_COLLIDE, src, target, shove_blocked) & COMSIG_CARBON_SHOVE_HANDLED)
 			return
 		if(directional_blocked || shove_blocked)
-			target.Knockdown(SHOVE_KNOCKDOWN_SOLID)
+			target.Knockdown(SHOVE_KNOCKDOWN_SOLID || HAS_TRAIT(target, TRAIT_FEEBLE))
 			target.visible_message(span_danger("[name] shoves [target.name], knocking [target.p_them()] down!"),
 				span_userdanger("You're knocked down from a shove by [name]!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), COMBAT_MESSAGE_RANGE, src)
 			to_chat(src, span_danger("You shove [target.name], knocking [target.p_them()] down!"))

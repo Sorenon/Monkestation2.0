@@ -543,6 +543,8 @@
 
 /// We check for adjacency when using the primary attack.
 /obj/machinery/door/firedoor/try_to_crowbar(obj/item/acting_object, mob/user)
+	if(feeble(user, density ? "open" : "close"))
+		return FALSE
 	if(welded || operating)
 		return
 
@@ -563,6 +565,8 @@
 
 /// A simple toggle for firedoors between on and off
 /obj/machinery/door/firedoor/try_to_crowbar_secondary(obj/item/acting_object, mob/user)
+	if(feeble(user, density ? "open" : "close"))
+		return FALSE
 	if(welded || operating)
 		return
 
@@ -572,6 +576,18 @@
 			addtimer(CALLBACK(src, PROC_REF(correct_state)), 2 SECONDS, TIMER_UNIQUE)
 	else
 		close()
+
+/obj/machinery/door/firedoor/proc/feeble(mob/user, action)
+	if(!HAS_TRAIT(user, TRAIT_FEEBLE))
+		return FALSE
+	user.visible_message(span_notice("[user] strugles to [action] the firelock."), \
+		span_notice("You struggle to [action] the firelock."))
+	return !do_after(user, 4 SECONDS, target = src, extra_checks = CALLBACK(src, TYPE_PROC_REF(/obj/machinery/door/firedoor, firedor_feeble_callback)))
+
+/obj/machinery/door/firedoor/proc/firedor_feeble_callback()
+	if(welded || operating)
+		return FALSE
+	return TRUE
 
 /obj/machinery/door/firedoor/proc/handle_held_open_adjacency(mob/user)
 	SIGNAL_HANDLER

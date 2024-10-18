@@ -336,7 +336,7 @@
 		//Don't hit people through windows, ok?
 		if(!directional_blocked && SEND_SIGNAL(target_shove_turf, COMSIG_CARBON_DISARM_COLLIDE, src, target, shove_blocked) & COMSIG_CARBON_SHOVE_HANDLED)
 			return
-		if(directional_blocked || shove_blocked)
+		if(directional_blocked || shove_blocked || HAS_TRAIT(target, TRAIT_FEEBLE))
 			target.Knockdown(SHOVE_KNOCKDOWN_SOLID)
 			target.visible_message(span_danger("[name] shoves [target.name], knocking [target.p_them()] down!"),
 				span_userdanger("You're knocked down from a shove by [name]!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), COMBAT_MESSAGE_RANGE, src)
@@ -510,6 +510,10 @@
 						null, span_hear("You hear the rustling of clothes."), DEFAULT_MESSAGE_RANGE, list(helper, src))
 			to_chat(helper, span_notice("You hug [src] to make [p_them()] feel better!"))
 			to_chat(src, span_notice("[helper] hugs you to make you feel better!"))
+
+		if (HAS_TRAIT(src, TRAIT_FEEBLE) && (helper.grab_state >= GRAB_AGGRESSIVE || rand() >= 0.3))
+			to_chat(helper, span_danger("You feel something break inside [src]!"))
+			feeble_trait_wound_chest(src)
 
 		// Warm them up with hugs
 		share_bodytemperature(helper)
