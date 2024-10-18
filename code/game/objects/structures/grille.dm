@@ -190,6 +190,8 @@
 	if(shock(user, 100))
 		return
 	tool.play_tool_sound(src, 100)
+	if(feeble_trait_slow_interact(user, "cut the grille", src))
+		return
 	deconstruct()
 	return TOOL_ACT_TOOLTYPE_SUCCESS
 
@@ -201,6 +203,8 @@
 		return FALSE
 	if(!tool.use_tool(src, user, 0, volume=100))
 		return FALSE
+	if(feeble_trait_slow_interact(user, "[anchored ? "unfasten" : "fasten"] the grille", src))
+		return
 	set_anchored(!anchored)
 	user.visible_message(span_notice("[user] [anchored ? "fastens" : "unfastens"] [src]."), \
 		span_notice("You [anchored ? "fasten [src] to" : "unfasten [src] from"] the floor."))

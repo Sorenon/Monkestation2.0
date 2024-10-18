@@ -20,6 +20,10 @@
 		act = copytext(act, 1, custom_param)
 
 	act = lowertext(act)
+
+	if (HAS_TRAIT(src, TRAIT_FEEBLE) && (act in list("scream", "screech", "screams", "screeches")))
+		act = pick("whimper", "cry")
+
 	var/list/key_emotes = GLOB.emote_list[act]
 
 	if(!length(key_emotes))

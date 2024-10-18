@@ -220,6 +220,9 @@
 			var/obj/B = user.buckled
 			var/movementdirection = turn(direction,180)
 			addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/extinguisher, move_chair), B, movementdirection), 1)
+		else if(HAS_TRAIT(user, TRAIT_FEEBLE) && w_class > WEIGHT_CLASS_SMALL && prob(15) && isliving(user))
+			if(!feeble_trait_recoil(user, direction, FALSE))
+				user.newtonian_move(turn(direction, 180))
 		else
 			user.newtonian_move(turn(direction, 180))
 

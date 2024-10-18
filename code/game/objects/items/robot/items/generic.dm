@@ -109,6 +109,8 @@
 				else
 					user.visible_message(span_notice("[user] hugs [attacked_mob] to make [attacked_mob.p_them()] feel better!"), \
 							span_notice("You hug [attacked_mob] to make [attacked_mob.p_them()] feel better!"))
+					if(HAS_TRAIT(attacked_mob, TRAIT_FEEBLE))
+						feeble_trait_wound_chest(attacked_mob, hugger=user)
 				if(attacked_mob.resting)
 					attacked_mob.set_resting(FALSE, TRUE)
 			else

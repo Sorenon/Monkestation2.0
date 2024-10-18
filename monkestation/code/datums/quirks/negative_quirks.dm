@@ -240,3 +240,72 @@
 */
 /datum/quirk/tunnel_vision/remove()
 	quirk_holder.remove_fov_trait("tunnel vision quirk")
+
+/datum/quirk/feeble
+	name = "Feeble"
+	desc = "You feel really weak. All it takes is a strong gust of wind to knock you over and doing anything dexterous takes much longer."
+	mob_trait = TRAIT_FEEBLE
+	value = -14
+	icon = FA_ICON_BONE
+	gain_text = span_notice("You feel really weak.")
+	lose_text = span_notice("You feel less weak.")
+	medical_record_text = "Patient is feeble."
+
+/datum/movespeed_modifier/feeble_trait
+	multiplicative_slowdown = 1
+
+/datum/actionspeed_modifier/feeble_trait
+	multiplicative_slowdown = 2
+
+/datum/quirk/feeble/add()
+	quirk_holder.add_movespeed_modifier(/datum/movespeed_modifier/feeble_trait)
+	quirk_holder.add_actionspeed_modifier(/datum/actionspeed_modifier/feeble_trait)
+
+/datum/quirk/feeble/remove()
+	quirk_holder.remove_movespeed_modifier(/datum/movespeed_modifier/feeble_trait)
+	quirk_holder.remove_actionspeed_modifier(/datum/actionspeed_modifier/feeble_trait)
+
+/proc/feeble_trait_wound_chest(mob/living/carbon/target, hugger=null, force=FALSE)
+	if (!istype(target))
+		return
+	var/obj/item/bodypart/chest = target.get_bodypart(BODY_ZONE_CHEST)
+	if (!force && !prob((locate(/datum/wound/blunt) in chest.wounds) ? 30 : 15))
+		return
+	if (hugger)
+		to_chat(hugger, span_danger("You feel something break inside [target]!"))
+	if (locate(/datum/wound/blunt/bone/critical) in chest.wounds)
+		playsound(target, 'sound/effects/wounds/crack2.ogg', 70 + (20 * 3), TRUE)
+	else if (locate(/datum/wound/blunt/bone/severe) in chest.wounds)
+		chest.force_wound_upwards(/datum/wound/blunt/bone/critical, FALSE, "feeble")
+	else if (locate(/datum/wound/blunt/bone/rib_break) in chest.wounds)
+		chest.force_wound_upwards(/datum/wound/blunt/bone/severe, FALSE, "feeble")
+	else
+		chest.force_wound_upwards(/datum/wound/blunt/bone/rib_break, FALSE, "feeble")
+	chest.receive_damage(brute = 15)
+
+/proc/feeble_trait_slow_interact(mob/living/carbon/user, action, atom)
+	if(!HAS_TRAIT(user, TRAIT_FEEBLE))
+		return FALSE
+	user.visible_message(span_notice("[user] strugles to [action]."), \
+			span_notice("You struggle to [action]."))
+	return !do_after(user, 2 SECONDS, target = atom)
+
+/proc/feeble_trait_recoil(mob/living/user, direction, is_gunshot)
+	if (user.body_position == LYING_DOWN || !user.has_gravity())
+		if (is_gunshot)
+			var/item = user.get_active_held_item()
+			user.dropItemToGround(item)
+			user.visible_message(span_danger("The recoil makes [user] drop [item]!"), \
+				span_danger("The recoil makes you drop [item]!"))
+		return FALSE
+	user.Knockdown(4 SECONDS)
+	user.visible_message(span_danger("[user] looses [user.p_their()] balance!"), \
+		span_danger("The recoil makes you loose your balance!"))
+	var/shove_dir = turn(direction, 180)
+	if (!is_gunshot && prob(1))
+		user.safe_throw_at(get_edge_target_turf(user, shove_dir), 4, 2, user, spin=FALSE)
+	else
+		var/turf/target_shove_turf = get_step(user.loc, shove_dir)
+		var/turf/target_old_turf = user.loc
+		user.Move(target_shove_turf, shove_dir)
+		SEND_SIGNAL(target_shove_turf, COMSIG_CARBON_DISARM_COLLIDE, user, user, get_turf(user) == target_old_turf)

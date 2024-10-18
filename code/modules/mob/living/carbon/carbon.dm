@@ -146,6 +146,8 @@
 		var/turf/end_T = get_turf(target)
 		if(start_T && end_T)
 			log_combat(src, thrown_thing, "thrown", addition="grab from tile in [AREACOORD(start_T)] towards tile at [AREACOORD(end_T)]")
+	if (HAS_TRAIT(src, TRAIT_FEEBLE) && prob(15))
+		return fumble_throw_item(target, thrown_thing)
 	var/power_throw = 0
 	if(HAS_TRAIT(src, TRAIT_HULK))
 		power_throw++
@@ -155,6 +157,8 @@
 		power_throw++
 	if(neckgrab_throw)
 		power_throw++
+	if (HAS_TRAIT(src, TRAIT_FEEBLE))
+		power_throw = 0
 	if(isitem(thrown_thing))
 		var/obj/item/thrown_item = thrown_thing
 		if(thrown_item.throw_verb)
@@ -163,8 +167,17 @@
 					span_danger("You [verb_text] [thrown_thing][power_throw ? " really hard!" : "."]"))
 	log_message("has thrown [thrown_thing] [power_throw > 0 ? "really hard" : ""]", LOG_ATTACK)
 	var/extra_throw_range = HAS_TRAIT(src, TRAIT_THROWINGARM) ? 2 : 0
+	var/total_throw_range = thrown_thing.throw_range + extra_throw_range
+	if (HAS_TRAIT(src, TRAIT_FEEBLE))
+		total_throw_range = floor(total_throw_range / 2)
 	newtonian_move(get_dir(target, src))
-	thrown_thing.safe_throw_at(target, thrown_thing.throw_range + extra_throw_range, max(1,thrown_thing.throw_speed + power_throw), src, null, null, null, move_force)
+	thrown_thing.safe_throw_at(target, total_throw_range, max(1,thrown_thing.throw_speed + power_throw), src, null, null, null, move_force)
+
+	if (HAS_TRAIT(src, TRAIT_FEEBLE) && body_position == STANDING_UP && prob(50))
+		if (!isitem(thrown_thing) || thrown_thing:w_class > WEIGHT_CLASS_NORMAL || thrown_thing.throwforce)
+			visible_message(span_danger("[src] looses [src.p_their()] balance."), \
+				span_danger("You loose your balance."))
+			Knockdown(2 SECONDS)
 
 /mob/living/carbon/proc/canBeHandcuffed()
 	return FALSE

@@ -1226,6 +1226,8 @@
 		if(istype(I, /obj/item/fireaxe) && !HAS_TRAIT(I, TRAIT_WIELDED)) //being fireaxe'd
 			to_chat(user, span_warning("You need to be wielding [I] to do that!"))
 			return
+		if(apply_feeble_delay(user, density ? "open" : "close"))
+			return FALSE
 		INVOKE_ASYNC(src, density ? PROC_REF(open) : PROC_REF(close), BYPASS_DOOR_CHECKS)
 
 /obj/machinery/door/airlock/open(forced = DEFAULT_DOOR_CHECKS)

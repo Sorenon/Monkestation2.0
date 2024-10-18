@@ -144,7 +144,14 @@
 	var/ingredient_count = 0
 
 	for (var/atom/movable/ingredient as anything in ingredients)
+		var/mob/living/L = ingredient
+		var/lying_angle
+		if(istype(L))
+			lying_angle = L.get_lying_angle()
+			L.set_lying_angle(90)
 		var/image/ingredient_overlay = image(ingredient, src)
+		if(istype(L))
+			L.set_lying_angle(lying_angle)
 
 		var/icon/ingredient_icon = icon(ingredient.icon, ingredient.icon_state)
 
@@ -324,6 +331,9 @@
 		update_appearance()
 		return
 
+	if (istype(O, /obj/item/riding_offhand))
+		var/obj/item/riding_offhand/riding = O
+		return put_in_microwave(riding.rider, user)
 	return ..()
 
 /obj/machinery/microwave/attack_hand_secondary(mob/user, list/modifiers)

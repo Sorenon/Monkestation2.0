@@ -543,6 +543,8 @@
 
 /// We check for adjacency when using the primary attack.
 /obj/machinery/door/firedoor/try_to_crowbar(obj/item/acting_object, mob/user)
+	if(apply_feeble_delay(user, density ? "open" : "close"))
+		return
 	if(welded || operating)
 		return
 
@@ -563,6 +565,8 @@
 
 /// A simple toggle for firedoors between on and off
 /obj/machinery/door/firedoor/try_to_crowbar_secondary(obj/item/acting_object, mob/user)
+	if(apply_feeble_delay(user, density ? "open" : "close"))
+		return
 	if(welded || operating)
 		return
 

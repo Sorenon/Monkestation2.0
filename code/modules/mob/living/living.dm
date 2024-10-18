@@ -1086,6 +1086,11 @@
 	if(buckled || mob_negates_gravity())
 		return
 
+	if (pressure_difference > pressure_resistance && body_position != LYING_DOWN && HAS_TRAIT(src, TRAIT_FEEBLE))
+		Paralyze(1 SECONDS)
+		Knockdown(4 SECONDS)
+		emote("scream")
+
 	if(client && client.move_delay >= world.time + world.tick_lag*2)
 		pressure_resistance_prob_delta -= 30
 

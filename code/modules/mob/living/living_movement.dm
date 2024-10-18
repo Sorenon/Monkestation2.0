@@ -97,6 +97,9 @@
 	SEND_SIGNAL(src, COMSIG_LIVING_UPDATING_PULL_MOVESPEED)
 
 	if(pulling)
+		if (HAS_TRAIT(src, TRAIT_FEEBLE))
+			update_pull_movespeed_feeble()
+			return
 		if(isliving(pulling))
 			var/mob/living/L = pulling
 			if(!slowed_by_drag || L.body_position == STANDING_UP || L.buckled || grab_state >= GRAB_AGGRESSIVE)
