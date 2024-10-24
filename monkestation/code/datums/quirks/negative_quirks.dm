@@ -241,29 +241,48 @@
 /datum/quirk/tunnel_vision/remove()
 	quirk_holder.remove_fov_trait("tunnel vision quirk")
 
-/datum/quirk/feeble
+/datum/quirk/item_quirk/feeble
 	name = "Feeble"
-	desc = "You feel really weak. All it takes is a strong gust of wind to knock you over and doing anything dexterous takes much longer."
+	desc = "All it takes is a strong gust of wind to knock you over, doing anything physical takes much longer and good luck using anything with recoil."
 	mob_trait = TRAIT_FEEBLE
 	value = -14
-	icon = FA_ICON_BONE
+	icon = FA_ICON_PERSON_CANE
 	gain_text = span_notice("You feel really weak.")
 	lose_text = span_notice("You feel less weak.")
 	medical_record_text = "Patient is feeble."
+	mail_goodies = list(/obj/item/cane, /obj/item/cane/white)
 
-/datum/movespeed_modifier/feeble_trait
+/datum/quirk/item_quirk/feeble/add_unique(client/client_source)
+	give_item_to_holder(/obj/item/cane, list(LOCATION_HANDS = ITEM_SLOT_HANDS, LOCATION_BACKPACK = ITEM_SLOT_BACKPACK))
+
+/datum/movespeed_modifier/feeble_trait_ground
+	variable = TRUE
+	movetypes = GROUND
+
+/datum/movespeed_modifier/feeble_trait_not_ground
 	multiplicative_slowdown = 1
+	blacklisted_movetypes = GROUND
 
 /datum/actionspeed_modifier/feeble_trait
-	multiplicative_slowdown = 2
+	multiplicative_slowdown = 3
 
-/datum/quirk/feeble/add()
-	quirk_holder.add_movespeed_modifier(/datum/movespeed_modifier/feeble_trait)
+/datum/quirk/item_quirk/feeble/add()
+	quirk_holder.add_movespeed_modifier(/datum/movespeed_modifier/feeble_trait_not_ground)
 	quirk_holder.add_actionspeed_modifier(/datum/actionspeed_modifier/feeble_trait)
+	feeble_trait_update_slowdown(quirk_holder)
 
-/datum/quirk/feeble/remove()
-	quirk_holder.remove_movespeed_modifier(/datum/movespeed_modifier/feeble_trait)
+/datum/quirk/item_quirk/feeble/remove()
+	quirk_holder.remove_movespeed_modifier(/datum/movespeed_modifier/feeble_trait_ground)
+	quirk_holder.remove_movespeed_modifier(/datum/movespeed_modifier/feeble_trait_not_ground)
 	quirk_holder.remove_actionspeed_modifier(/datum/actionspeed_modifier/feeble_trait)
+
+/proc/feeble_trait_update_slowdown(mob/living/target)
+	var/slowdown = 2
+	var/list/slowdown_mods = list()
+	SEND_SIGNAL(target, COMSIG_LIVING_FEEBLE_MOVESPEED_UPDATE, slowdown_mods)
+	for(var/num in slowdown_mods)
+		slowdown *= num
+	target.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/feeble_trait_ground, multiplicative_slowdown = slowdown)
 
 /proc/feeble_trait_wound_chest(mob/living/carbon/target, hugger=null, force=FALSE)
 	if (!istype(target))
@@ -276,11 +295,11 @@
 	if (locate(/datum/wound/blunt/bone/critical) in chest.wounds)
 		playsound(target, 'sound/effects/wounds/crack2.ogg', 70 + (20 * 3), TRUE)
 	else if (locate(/datum/wound/blunt/bone/severe) in chest.wounds)
-		chest.force_wound_upwards(/datum/wound/blunt/bone/critical, FALSE, "feeble")
+		chest.force_wound_upwards(/datum/wound/blunt/bone/critical)
 	else if (locate(/datum/wound/blunt/bone/rib_break) in chest.wounds)
-		chest.force_wound_upwards(/datum/wound/blunt/bone/severe, FALSE, "feeble")
+		chest.force_wound_upwards(/datum/wound/blunt/bone/severe)
 	else
-		chest.force_wound_upwards(/datum/wound/blunt/bone/rib_break, FALSE, "feeble")
+		chest.force_wound_upwards(/datum/wound/blunt/bone/rib_break)
 	chest.receive_damage(brute = 15)
 
 /proc/feeble_trait_slow_interact(mob/living/carbon/user, action, atom)
@@ -291,18 +310,18 @@
 	return !do_after(user, 2 SECONDS, target = atom)
 
 /proc/feeble_trait_recoil(mob/living/user, direction, is_gunshot)
-	if (user.body_position == LYING_DOWN || !user.has_gravity())
+	if (user.body_position == LYING_DOWN || user.buckled)
 		if (is_gunshot)
 			var/item = user.get_active_held_item()
 			user.dropItemToGround(item)
-			user.visible_message(span_danger("The recoil makes [user] drop [item]!"), \
-				span_danger("The recoil makes you drop [item]!"))
+			user.visible_message(span_danger("[item] flies out of [user]'s hand!"), \
+				span_danger("The recoil makes [item] fly out of your hand!"))
 		return FALSE
 	user.Knockdown(4 SECONDS)
 	user.visible_message(span_danger("[user] looses [user.p_their()] balance!"), \
-		span_danger("The recoil makes you loose your balance!"))
+		span_danger("You loose your balance!"))
 	var/shove_dir = turn(direction, 180)
-	if (!is_gunshot && prob(1))
+	if (!is_gunshot && prob(0.01))
 		user.safe_throw_at(get_edge_target_turf(user, shove_dir), 4, 2, user, spin=FALSE)
 	else
 		var/turf/target_shove_turf = get_step(user.loc, shove_dir)

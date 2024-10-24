@@ -261,7 +261,7 @@
 	var/delay_multiplier = 4 // magic number from wheelchair code //MONKESTATION EDIT
 	//MONKESTATION EDIT START
 	if(HAS_TRAIT(user, TRAIT_FEEBLE))
-		delay_multiplier *= 2
+		delay_multiplier *= 3
 	//MONKESTATION EDIT END
 	vehicle_move_delay = round(CONFIG_GET(number/movedelay/run_delay) * delay_multiplier) / clamp(user.usable_hands, 1, 2)
 	return ..()

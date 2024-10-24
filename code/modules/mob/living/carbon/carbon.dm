@@ -148,7 +148,7 @@
 			log_combat(src, thrown_thing, "thrown", addition="grab from tile in [AREACOORD(start_T)] towards tile at [AREACOORD(end_T)]")
 	//MONKESTATION EDIT START
 	var/feeble = HAS_TRAIT(src, TRAIT_FEEBLE)
-	if (feeble && prob(15))
+	if (feeble && prob(buckled ? 45 : 15))
 		return fumble_throw_item(target, thrown_thing)
 	//MONKESTATION EDIT START
 	var/power_throw = 0
@@ -176,10 +176,10 @@
 	//MONKESTATION EDIT START
 	var/total_throw_range = thrown_thing.throw_range + extra_throw_range
 	if (feeble)
-		total_throw_range = ceil(total_throw_range / 2)
+		total_throw_range = ceil(total_throw_range / (buckled ? 3 : 2))
 	// thrown_thing.safe_throw_at(target, thrown_thing.throw_range + extra_throw_range, max(1,thrown_thing.throw_speed + power_throw), src, null, null, null, move_force) - MONKESTATION EDIT ORIGINAL
 	thrown_thing.safe_throw_at(target, total_throw_range, max(1,thrown_thing.throw_speed + power_throw), src, null, null, null, move_force)
-	if (feeble && body_position == STANDING_UP && prob(50))
+	if (feeble && body_position == STANDING_UP && prob(50) && !buckled)
 		if (!isitem(thrown_thing) || thrown_thing:w_class > WEIGHT_CLASS_NORMAL || thrown_thing.throwforce)
 			visible_message(span_danger("[src] looses [src.p_their()] balance."), \
 				span_danger("You loose your balance."))

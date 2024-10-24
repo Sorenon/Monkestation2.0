@@ -207,8 +207,8 @@
 						span_userdanger("You're hit by [thrown_item]!"))
 		if(!thrown_item.throwforce)
 			//MONKESTATION EDIT START
-			if (HAS_TRAIT(src, TRAIT_FEEBLE) && body_position != LYING_DOWN && thrown_item.w_class > WEIGHT_CLASS_NORMAL)
-				Knockdown(4 SECONDS, intentional=FALSE)
+			if (HAS_TRAIT(src, TRAIT_FEEBLE) && body_position != LYING_DOWN && thrown_item.w_class > WEIGHT_CLASS_NORMAL && !buckled)
+				Knockdown(4 SECONDS)
 				emote("scream", intentional=FALSE)
 			//MONKESTATION EDIT END
 			return
@@ -219,7 +219,7 @@
 		if(body_position == LYING_DOWN) // physics says it's significantly harder to push someone by constantly chucking random furniture at them if they are down on the floor.
 			hitpush = FALSE
 		//MONKESTATION EDIT START
-		else if (HAS_TRAIT(src, TRAIT_FEEBLE) && thrown_item.w_class > WEIGHT_CLASS_SMALL)
+		else if (HAS_TRAIT(src, TRAIT_FEEBLE) && thrown_item.w_class > WEIGHT_CLASS_SMALL && !buckled)
 			Knockdown(4 SECONDS)
 			emote("scream", intentional=FALSE)
 		//MONKESTATION EDIT END

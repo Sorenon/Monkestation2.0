@@ -23,7 +23,7 @@
 
 	//MONKESTATION EDIT START
 	// not a fan of this but I don't think there's a less hacky way to do it without changing how emotes work
-	if (HAS_TRAIT(src, TRAIT_FEEBLE) && !intentional && (act in list("scream", "screech", "screams", "screeches")))
+	if (HAS_TRAIT(src, TRAIT_FEEBLE) && (act in list("scream", "screech", "screams", "screeches")) /*&& !intentional*/)
 		act = pick("whimper", "cry")
 	//MONKESTATION EDIT END
 
