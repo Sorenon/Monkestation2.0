@@ -293,8 +293,8 @@
 		slapped.apply_damage(damage, BRUTE, affecting, armor_block, attack_direction = attack_direction)
 
 		slapped.visible_message(
-			span_userdanger("[user]'s slap really hurt!"),
 			span_danger("[user] hurt [slapped]!"),
+			span_userdanger("[user]'s slap really hurt!"),
 		)
 	//MONKESTATION EDIT END
 	return

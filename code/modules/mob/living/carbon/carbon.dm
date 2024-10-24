@@ -160,8 +160,10 @@
 		power_throw++
 	if(neckgrab_throw)
 		power_throw++
+	//MONKESTATION EDIT START
 	if (feeble)
 		power_throw = 0
+	//MONKESTATION EDIT END
 	if(isitem(thrown_thing))
 		var/obj/item/thrown_item = thrown_thing
 		if(thrown_item.throw_verb)
@@ -174,7 +176,7 @@
 	//MONKESTATION EDIT START
 	var/total_throw_range = thrown_thing.throw_range + extra_throw_range
 	if (feeble)
-		total_throw_range = floor(total_throw_range / 2)
+		total_throw_range = ceil(total_throw_range / 2)
 	// thrown_thing.safe_throw_at(target, thrown_thing.throw_range + extra_throw_range, max(1,thrown_thing.throw_speed + power_throw), src, null, null, null, move_force) - MONKESTATION EDIT ORIGINAL
 	thrown_thing.safe_throw_at(target, total_throw_range, max(1,thrown_thing.throw_speed + power_throw), src, null, null, null, move_force)
 	if (feeble && body_position == STANDING_UP && prob(50))
