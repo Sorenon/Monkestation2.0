@@ -177,8 +177,10 @@
 		angle -= 360
 	if(recoil && !tk_firing(user))
 		recoil_camera(user, recoil+1, (recoil*recoil_backtime_multiplier) + 1, recoil, angle)
+		//MONKESTATION EDIT START
 		if(HAS_TRAIT(user, TRAIT_FEEBLE))
 			feeble_trait_recoil(user, get_dir(user, pbtarget), TRUE)
+		//MONKESTATION EDIT END
 	fire_sounds()
 	if(!suppressed)
 		if(message)

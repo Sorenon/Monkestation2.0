@@ -8,3 +8,4 @@
 					span_danger("You fumble [thrown_thing]."))
 	log_message("has failed to throw [thrown_thing]", LOG_ATTACK)
 	thrown_thing.safe_throw_at(target, min(thrown_thing.throw_range, 1), 1, src, FALSE, null, null, move_force, TRUE)
+	return FALSE

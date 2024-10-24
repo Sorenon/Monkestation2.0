@@ -1,3 +1,13 @@
+/obj/machinery/door/firedoor/try_to_crowbar(obj/item/acting_object, mob/user)
+	if(apply_feeble_delay(user, density ? "open" : "close"))
+		return
+	. = ..()
+
+/obj/machinery/door/firedoor/try_to_crowbar_secondary(obj/item/acting_object, mob/user)
+	if(apply_feeble_delay(user, density ? "open" : "close"))
+		return
+	. = ..()
+
 /obj/machinery/door/firedoor/proc/apply_feeble_delay(mob/user, action)
 	if(!HAS_TRAIT(user, TRAIT_FEEBLE))
 		return FALSE

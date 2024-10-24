@@ -92,6 +92,7 @@
 #define TRAIT_STOWAWAY			"stowaway"
 #define TRAIT_UNSTABLE_ASS		"unstable_ass"
 
+
 // Traits given by station traits
 /// Station trait for when the clown has bridge access *shudders*
 #define STATION_TRAIT_CLOWN_BRIDGE "clown_bridge"
