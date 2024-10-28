@@ -220,8 +220,12 @@
  * Funny internals
  */
 /obj/item/tank/internals/emergency_oxygen/engi/clown
-	name = "funny emergency oxygen tank"
-	desc = "Used for emergencies. Contains very little oxygen with an extra of a funny gas, so try to conserve it until you actually need it."
+	//MONKESTATION EDIT START
+	// name = "funny emergency oxygen tank"
+	// desc = "Used for emergencies. Contains very little oxygen with an extra of a funny gas, so try to conserve it until you actually need it."
+	name = "'enhanced' emergency oxygen tank"
+	desc = "Used for emergencies. Contains very little oxygen, so try to conserve it until you actually need it. This one has been topped up with a free bonus gas!"
+	//MONKESTATION EDIT END
 	icon_state = "emergency_clown"
 	inhand_icon_state = "emergency_clown"
 	worn_icon_state = "emergency_clown"
