@@ -18,3 +18,7 @@
 	description = "Oooh, jazzy!"
 	mood_change = 2
 	timeout = 1 MINUTE
+
+/datum/mood_event/syndi_propaganda/antag
+	description = "I'm not the only thing this station has to worry about."
+	mood_change = 1
