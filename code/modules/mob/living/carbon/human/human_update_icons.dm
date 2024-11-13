@@ -939,6 +939,8 @@ generate/load female uniform sprites matching all previously decided variables
 	var/icon/lenghten_ankles_mask = icon(mask_icon, "Cut5")
 //MONKESTATION EDIT END
 
+	stack_trace("This is a test to see if this 'error' gets reported by CI testing <3")
+
 	appearance.remove_filter(list(
 		"Cut_Torso",
 		"Cut_Legs",
