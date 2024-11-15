@@ -869,10 +869,7 @@ generate/load female uniform sprites matching all previously decided variables
 // Some overlays can't be displaced as they're too close to the edge of the sprite or cross the middle point in a weird way.
 // So instead we have to pass them through an offset, which is close enough to look good.
 /mob/living/carbon/human/apply_overlay(cache_index)
-	/* MONKESTATION EDIT: made it so that MUTATIONS_LAYER and FRONT_MUTATIONS_LAYER always get their filters updated
-		This is required because they use cached / shared appearences
-	if(get_mob_height() == HUMAN_HEIGHT_MEDIUM) - original */
-	if(get_mob_height() == HUMAN_HEIGHT_MEDIUM && cache_index != MUTATIONS_LAYER && cache_index != FRONT_MUTATIONS_LAYER)
+	if(get_mob_height() == HUMAN_HEIGHT_MEDIUM)
 		return ..()
 
 	var/raw_applied = overlays_standing[cache_index]
