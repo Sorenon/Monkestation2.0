@@ -224,13 +224,22 @@
 		if(!trackable(humanoid))
 			continue
 		var/crewmember_name = "Unknown"
-		if(humanoid.wear_id)
-			var/obj/item/card/id/ID = humanoid.wear_id.GetID()
-			if(ID?.registered_name)
-				crewmember_name = ID.registered_name
+		var/job = ""
+		var/obj/item/card/id/id_card = humanoid.get_idcard(hand_first = FALSE)
+		if(id_card)
+			crewmember_name = id_card.registered_name
+			job = id_card.assignment
+
+		// var/obj/item/card/id/id_card = tracked_living_mob.get_idcard(hand_first = FALSE)
+		// if (id_card)
+		// 	entry["name"] =
+		// 	entry["assignment"] =
+		// 	var/trim_assignment = id_card.get_trim_assignment()
+		// 	if (jobs[trim_assignment] != null)
+		// 		entry["ijob"] = jobs[trim_assignment]
 		var/list/crewinfo = list(
 			ref = REF(humanoid),
-			name = crewmember_name,
+			name = crewmember_name + " ([job])",
 			)
 		objects += list(crewinfo)
 
