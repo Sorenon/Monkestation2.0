@@ -1,6 +1,6 @@
 /datum/computer_file/program/lifeline2
-	filename = "lifeline2"
-	filedesc = "Lifeline 2.0"
+	filename = "lifeline"
+	filedesc = "Lifeline"
 	extended_desc = "This program allows for tracking of crew members via their suit sensors."
 	transfer_access = list(ACCESS_MEDICAL)
 	category = PROGRAM_CATEGORY_CREW
@@ -11,26 +11,30 @@
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_TABLET
 	size = 5
 	tgui_id = "NtosLifeline"
-	///List of trackable entities. Updated by the scan() proc.
-	var/list/objects = list()
-	///Ref of the last trackable object selected by the user in the tgui window. Updated in the ui_act() proc.
-	var/atom/selected
+
+	var/list/sensors = list()
+	var/mob/living/selected
+	var/last_update
+	var/last_z
+
 	///Used to keep track of the last value program_icon_state was set to, to prevent constant unnecessary update_appearance() calls
 	var/last_icon_state = ""
 	program_icon = "heartbeat"
-	var/datum/crewmonitor/crewmonitor = new()
 	var/sort_asc = TRUE
+	var/sort_by = "dist"
+	var/blueshield = FALSE
+
 
 /datum/computer_file/program/lifeline2/on_start(mob/living/user)
 	. = ..()
 	if(.)
-		scan()
+		blueshield = istype(computer, /obj/item/modular_computer/pda/blueshield)
 		START_PROCESSING(SSfastprocess, src)
 		return
 	return FALSE
 
 /datum/computer_file/program/lifeline2/kill_program(mob/user)
-	objects = list()
+	sensors = list()
 	selected = null
 	STOP_PROCESSING(SSfastprocess, src)
 	return ..()
@@ -39,17 +43,14 @@
 	STOP_PROCESSING(SSfastprocess, src)
 	return ..()
 
-/datum/computer_file/program/lifeline2/ui_assets(mob/user)
-	return list(
-		get_asset_datum(/datum/asset/simple/radar_assets),
-	)
-
 /datum/computer_file/program/lifeline2/ui_data(mob/user)
 	var/list/data = list()
 	data["selected"] = selected
-	data["sensors"] = objects
+	data["sensors"] = update_sensors()
 	data["settings"] = list(
-		sortAsc = sort_asc
+		blueshield = blueshield,
+		sortAsc = sort_asc,
+		sortBy = sort_by
 	)
 	return data
 
@@ -57,90 +58,98 @@
 	switch(action)
 		if("select")
 			selected = params["ref"]
-			return TRUE
 		if("sortAsc")
 			sort_asc = params["val"]
-
-/**
- *
- *Checks the trackability of the selected target.
- *
- *If the target is on the computer's Z level, or both are on station Z
- *levels, and the target isn't untrackable, return TRUE.
- *Arguments:
- **arg1 is the atom being evaluated.
-*/
-/datum/computer_file/program/lifeline2/proc/trackable(mob/living/carbon/human/humanoid)
-	if(!humanoid || !istype(humanoid))
-		return FALSE
-	// if(trackable_super(humanoid))
-	// 	if (humanoid in GLOB.nanite_sensors_list)
-	// 		return TRUE
-	// 	if (istype(humanoid.w_uniform, /obj/item/clothing/under))
-	// 		var/obj/item/clothing/under/uniform = humanoid.w_uniform
-	// 		if(uniform.has_sensor && uniform.sensor_mode >= SENSOR_COORDS) // Suit sensors must be on maximum
-	// 			return TRUE
+		if("sortBy")
+			sort_by = params["val"]
+		if("blueshield")
+			blueshield = params["val"]
 	return TRUE
 
-/datum/computer_file/program/lifeline2/proc/trackable_super(atom/movable/signal)
-	if(!signal || !computer)
-		return FALSE
-	var/turf/here = get_turf(computer)
-	var/turf/there = get_turf(signal)
-	if(!here || !there)
-		return FALSE //I was still getting a runtime even after the above check while scanning, so fuck it
-	return (there.z == here.z) || (is_station_level(here.z) && is_station_level(there.z))
+/datum/computer_file/program/lifeline2/proc/tracking_level(mob/living/tracked_living_mob, z)
+	// Check if z-level is correct
+	var/turf/pos = get_turf(tracked_living_mob)
 
+	// Is our target in nullspace for some reason?
+	if(!pos)
+		stack_trace("Tracked mob has no loc and is likely in nullspace: [tracked_living_mob] ([tracked_living_mob.type])")
+		return SENSOR_OFF
 
-/**
- *
- *Runs a scan of all the trackable atoms.
- *
- *Checks each entry in the GLOB of the specific trackable atoms against
- *the track() proc, and fill the objects list with lists containing the
- *atoms' names and REFs. The objects list is handed to the tgui screen
- *for displaying to, and being selected by, the user. A two second
- *sleep is used to delay the scan, both for thematical reasons as well
- *as to limit the load players may place on the server using these
- *somewhat costly loops.
-*/
-/datum/computer_file/program/lifeline2/proc/scan()
-	var/datum/crewmonitor/crewmonitor = new()
-	var/list/jobs = crewmonitor.jobs
+	// Machinery and the target should be on the same level or different levels of the same station
+	if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
+		return SENSOR_OFF
 
-	objects = list()
-	for(var/i in GLOB.human_list)
-		var/mob/living/carbon/human/humanoid = i
-		if(!trackable(humanoid))
+	// Set sensor level based on whether we're in the nanites list or the suit sensor list.
+	if(tracked_living_mob in GLOB.nanite_sensors_list)
+		return SENSOR_COORDS
+
+	var/mob/living/carbon/human/tracked_human = tracked_living_mob
+
+	// Check their humanity.
+	if(!ishuman(tracked_human))
+		stack_trace("Non-human mob is in suit_sensors_list: [tracked_living_mob] ([tracked_living_mob.type])")
+		return SENSOR_OFF
+
+	// Check they have a uniform
+	var/obj/item/clothing/under/uniform = tracked_human.w_uniform
+	if (!istype(uniform))
+		stack_trace("Human without a suit sensors compatible uniform is in suit_sensors_list: [tracked_human] ([tracked_human.type]) ([uniform?.type])")
+		return SENSOR_OFF
+
+	// Check if their uniform is in a compatible mode.
+	if (uniform.has_sensor >= HAS_SENSORS)
+		return uniform.sensor_mode
+	return SENSOR_OFF
+
+/datum/computer_file/program/lifeline2/proc/update_sensors()
+	var/turf/pos = get_turf(computer)
+	if (world.time <= last_update + 3 SECONDS && pos.z == last_z && sensors)
+		return sensors
+
+	sensors = list()
+	for(var/tracked_mob in GLOB.suit_sensors_list | GLOB.nanite_sensors_list)
+		var/mob/living/tracked_living_mob = tracked_mob
+		var/sensor_level = tracking_level(tracked_living_mob)
+		if(sensor_level == SENSOR_OFF)
 			continue
-		var/crewmember_name = "Unknown"
-		var/job = null
-		var/jobTitle = null
-		var/ijob = 81 // UNKNOWN_JOB_ID from crew.dm
-		var/obj/item/card/id/id_card = humanoid.get_idcard(hand_first = FALSE)
-		if(id_card)
-			crewmember_name = id_card.registered_name
-			job = id_card.get_trim_assignment()
-			// var/datum/job/job_ = SSjob.GetJob(job)
-			ijob = jobs[job]
-			jobTitle = id_card.assignment
-			// command = job_.departments_bitflags & (DEPARTMENT_BITFLAG_COMMAND|DEPARTMENT_BITFLAG_CENTRAL_COMMAND)
 
-		var/turf/curr = get_turf(computer)
-		var/turf/pos = get_turf(humanoid)
+		var/turf/sensor_pos = get_turf(tracked_living_mob)
 
-		var/list/crewinfo = list(
-			ref = REF(humanoid),
-			name = crewmember_name,
-			job = job,
-			ijob = ijob,
-			area = get_area_name(humanoid, format_text = TRUE),
-			dist = max(get_dist(curr, pos), 0),
-			degrees = round(get_angle(curr, pos)),
-			zdiff = pos.z-curr.z,
-			jobTitle= jobTitle
+		var/list/crewinfo
+		if (sensor_level == SENSOR_COORDS)
+			crewinfo = list(
+				ref = REF(tracked_living_mob),
+				name = "Unknown",
+				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
+				area = get_area_name(tracked_living_mob, format_text = TRUE),
+				dist = max(get_dist(pos, sensor_pos), 0),
+				degrees = round(get_angle(pos, sensor_pos)),
+				zdiff = sensor_pos.z-pos.z,
 			)
-		objects += list(crewinfo)
+		else
+			crewinfo = list(
+				ref = REF(tracked_living_mob),
+				name = "Unknown",
+				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
+				area = "Unknown",
+				dist = 999999,
+				degrees = 0,
+				zdiff = 0,
+			)
+
+		var/obj/item/card/id/id_card = tracked_living_mob.get_idcard(hand_first = FALSE)
+		if(id_card)
+			crewinfo["name"] = id_card.registered_name
+			crewinfo["assignment"] = id_card.assignment
+			var/trim_assignment = id_card.get_trim_assignment()
+			if (GLOB.crewmonitor.jobs[trim_assignment] != null)
+				crewinfo["trim"] = trim_assignment
+				crewinfo["ijob"] = GLOB.crewmonitor.jobs[trim_assignment]
+
+		sensors += list(crewinfo)
+	last_update = world.time
+	last_z = pos.z
+	return sensors
 
 //We use SSfastprocess for the program icon state because it runs faster than process_tick() does.
 /datum/computer_file/program/lifeline2/process()
@@ -151,15 +160,15 @@
 		return
 
 	var/atom/movable/signal = locate(selected) in GLOB.human_list
-	if(!trackable(signal))
+	var/turf/here_turf = get_turf(computer)
+	if(tracking_level(signal, here_turf.z) != SENSOR_COORDS)
 		program_icon_state = "[initial(program_icon_state)]lost"
 		if(last_icon_state != program_icon_state)
 			computer.update_appearance()
 			last_icon_state = program_icon_state
 		return
 
-	var/here_turf = get_turf(computer)
-	var/target_turf = get_turf(signal)
+	var/turf/target_turf = get_turf(signal)
 	var/trackdistance = get_dist_euclidean(here_turf, target_turf)
 	switch(trackdistance)
 		if(0)
