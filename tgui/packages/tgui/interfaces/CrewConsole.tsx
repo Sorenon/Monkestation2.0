@@ -26,8 +26,10 @@ const STAT_DEAD = 4;
 
 const SORT_OPTIONS = ['health', 'ijob', 'name', 'area'];
 
+// Monkestation: Exported for NtosLifeline
 export const jobIsHead = (jobId: number) => jobId % 10 === 0;
 
+// Monkestation: Exported for NtosLifeline
 export const jobToColor = (jobId: number) => {
   if (jobId === 0) {
     return COLORS.department.captain;

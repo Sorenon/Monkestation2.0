@@ -92,6 +92,12 @@ const NtosLifelineContent = () => {
         (sensor.ijob >= 200 && sensor.ijob < 300),
     )
     .sort((a, b) => {
+      if (a.dist !== -1 && b.dist === -1) {
+        return -1;
+      }
+      if (a.dist === -1 && b.dist !== -1) {
+        return 1;
+      }
       switch (sortBy) {
         case 'name':
           return sortAsc ? +(a.name > b.name) : +(b.name > a.name);
@@ -191,7 +197,7 @@ const CrewTab = (props: { object: CrewSensor }) => {
             {object.name} ({object.assignment})
           </span>
           <br />
-          {(object.dist !== 999999 && (
+          {(object.dist !== -1 && (
             <span>
               {object.dist > 0 && (
                 <Icon

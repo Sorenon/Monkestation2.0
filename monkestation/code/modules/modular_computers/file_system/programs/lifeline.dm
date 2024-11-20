@@ -113,8 +113,7 @@
 	for(var/tracked_mob in GLOB.suit_sensors_list | GLOB.nanite_sensors_list)
 		var/mob/living/tracked_living_mob = tracked_mob
 		var/sensor_level = tracking_level(tracked_living_mob)
-		// Change this to SENSOR_OFF to have humans without tracking show up as 'tracking disabled'
-		if(sensor_level != SENSOR_COORDS)
+		if(sensor_level == SENSOR_OFF)
 			continue
 
 		var/turf/sensor_pos = get_turf(tracked_living_mob)
@@ -136,7 +135,7 @@
 				name = "Unknown",
 				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
 				area = "Unknown",
-				dist = 999999, // This value tells the UI that tracking is disabled
+				dist = -1, // This value tells the UI that tracking is disabled
 				degrees = 0,
 				zdiff = 0,
 			)
