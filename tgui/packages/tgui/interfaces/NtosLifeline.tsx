@@ -1,6 +1,6 @@
 import { createSearch } from 'common/string';
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Icon, Input, Stack, Tabs } from '../components';
+import { Box, Button, Flex, Icon, Input, Stack, Tabs } from '../components';
 
 import { NtosWindow } from '../layouts';
 import { JOB2ICON } from './common/JobToIcon';
@@ -109,30 +109,31 @@ const NtosLifelineContent = () => {
   return (
     <NtosWindow.Content scrollable minHeight="540px">
       <Stack vertical>
-        <Stack.Item style={{ display: 'flex' }}>
-          <Input
-            placeholder="Search for name..."
-            style={{ flex: 1 }}
-            onInput={(e: { target: HTMLTextAreaElement }) =>
-              setSearchQuery((e.target as HTMLTextAreaElement).value)
-            }
-          />
-          <Button selected="True" onClick={cycleSortBy}>
-            {SORT_NAMES[sortBy]}
-          </Button>
-          <Button selected="True" onClick={() => setSortAsc(!sortAsc)}>
-            <Icon
-              style={{ marginLeft: '2px' }}
-              name={sortAsc ? 'chevron-up' : 'chevron-down'}
+        <Stack.Item>
+          <Flex>
+            <Input
+              placeholder="Search for name..."
+              style={{ flex: 1 }}
+              onInput={(e: { target: HTMLTextAreaElement }) =>
+                setSearchQuery((e.target as HTMLTextAreaElement).value)
+              }
             />
-          </Button>
-          <Button.Checkbox
-            style={{ float: 'right' }}
-            checked={blueshield}
-            onClick={() => setBlueshield(!blueshield)}
-          >
-            <Icon name={JOB2ICON['Blueshield']} />
-          </Button.Checkbox>
+            <Button selected="True" onClick={cycleSortBy}>
+              {SORT_NAMES[sortBy]}
+            </Button>
+            <Button selected="True" onClick={() => setSortAsc(!sortAsc)}>
+              <Icon
+                style={{ marginLeft: '2px' }}
+                name={sortAsc ? 'chevron-up' : 'chevron-down'}
+              />
+            </Button>
+            <Button.Checkbox
+              checked={blueshield}
+              onClick={() => setBlueshield(!blueshield)}
+            >
+              <Icon name={JOB2ICON['Blueshield']} />
+            </Button.Checkbox>
+          </Flex>
         </Stack.Item>
         <Stack.Item>
           {sorted.map((object, index) => (

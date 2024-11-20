@@ -1,4 +1,4 @@
-/datum/computer_file/program/lifeline2
+/datum/computer_file/program/lifeline
 	filename = "lifeline"
 	filedesc = "Lifeline"
 	extended_desc = "This program allows for tracking of crew members via their suit sensors."
@@ -6,26 +6,28 @@
 	category = PROGRAM_CATEGORY_CREW
 	ui_header = "borg_mon.gif" //DEBUG -- new icon before PR
 	program_icon_state = "radarntos"
-	// requires_ntnet = TRUE
+	requires_ntnet = TRUE
 	available_on_ntnet = TRUE
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_TABLET
 	size = 5
 	tgui_id = "NtosLifeline"
+	program_icon = "heartbeat"
 
+	// Tracking information
 	var/list/sensors = list()
 	var/mob/living/selected
-	var/last_update
-	var/last_z
+	var/last_update_time
 
-	///Used to keep track of the last value program_icon_state was set to, to prevent constant unnecessary update_appearance() calls
-	var/last_icon_state = ""
-	program_icon = "heartbeat"
+	// UI Settings
 	var/sort_asc = TRUE
 	var/sort_by = "dist"
 	var/blueshield = FALSE
 
+	///Used to keep track of the last value program_icon_state was set to, to prevent constant unnecessary update_appearance() calls
+	var/last_icon_state = ""
 
-/datum/computer_file/program/lifeline2/on_start(mob/living/user)
+
+/datum/computer_file/program/lifeline/on_start(mob/living/user)
 	. = ..()
 	if(.)
 		blueshield = istype(computer, /obj/item/modular_computer/pda/blueshield)
@@ -33,17 +35,17 @@
 		return
 	return FALSE
 
-/datum/computer_file/program/lifeline2/kill_program(mob/user)
+/datum/computer_file/program/lifeline/kill_program(mob/user)
 	sensors = list()
 	selected = null
 	STOP_PROCESSING(SSfastprocess, src)
 	return ..()
 
-/datum/computer_file/program/lifeline2/Destroy()
+/datum/computer_file/program/lifeline/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
 	return ..()
 
-/datum/computer_file/program/lifeline2/ui_data(mob/user)
+/datum/computer_file/program/lifeline/ui_data(mob/user)
 	var/list/data = list()
 	data["selected"] = selected
 	data["sensors"] = update_sensors()
@@ -54,7 +56,7 @@
 	)
 	return data
 
-/datum/computer_file/program/lifeline2/ui_act(action, params, datum/tgui/ui, datum/ui_state/state)
+/datum/computer_file/program/lifeline/ui_act(action, params, datum/tgui/ui, datum/ui_state/state)
 	switch(action)
 		if("select")
 			selected = params["ref"]
@@ -66,7 +68,8 @@
 			blueshield = params["val"]
 	return TRUE
 
-/datum/computer_file/program/lifeline2/proc/tracking_level(mob/living/tracked_living_mob, z)
+// Copied and modified from "code\game\machinery\computer\crew.dm"
+/datum/computer_file/program/lifeline/proc/tracking_level(mob/living/tracked_living_mob, z)
 	// Check if z-level is correct
 	var/turf/pos = get_turf(tracked_living_mob)
 
@@ -101,16 +104,17 @@
 		return uniform.sensor_mode
 	return SENSOR_OFF
 
-/datum/computer_file/program/lifeline2/proc/update_sensors()
+/datum/computer_file/program/lifeline/proc/update_sensors()
 	var/turf/pos = get_turf(computer)
-	if (world.time <= last_update + 3 SECONDS && pos.z == last_z && sensors)
+	if (world.time <= last_update_time + 3 SECONDS && sensors)
 		return sensors
 
 	sensors = list()
 	for(var/tracked_mob in GLOB.suit_sensors_list | GLOB.nanite_sensors_list)
 		var/mob/living/tracked_living_mob = tracked_mob
 		var/sensor_level = tracking_level(tracked_living_mob)
-		if(sensor_level == SENSOR_OFF)
+		// Change this to SENSOR_OFF to have humans without tracking show up as 'tracking disabled'
+		if(sensor_level != SENSOR_COORDS)
 			continue
 
 		var/turf/sensor_pos = get_turf(tracked_living_mob)
@@ -132,7 +136,7 @@
 				name = "Unknown",
 				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
 				area = "Unknown",
-				dist = 999999,
+				dist = 999999, // This value tells the UI that tracking is disabled
 				degrees = 0,
 				zdiff = 0,
 			)
@@ -147,12 +151,11 @@
 				crewinfo["ijob"] = GLOB.crewmonitor.jobs[trim_assignment]
 
 		sensors += list(crewinfo)
-	last_update = world.time
-	last_z = pos.z
+	last_update_time = world.time
 	return sensors
 
 //We use SSfastprocess for the program icon state because it runs faster than process_tick() does.
-/datum/computer_file/program/lifeline2/process()
+/datum/computer_file/program/lifeline/process()
 	if(computer.active_program != src)
 		STOP_PROCESSING(SSfastprocess, src) //We're not the active program, it's time to stop.
 		return
@@ -186,6 +189,6 @@
 	computer.setDir(get_dir(here_turf, target_turf))
 
 //We can use process_tick to restart fast processing, since the computer will be running this constantly either way.
-/datum/computer_file/program/lifeline2/process_tick(seconds_per_tick)
+/datum/computer_file/program/lifeline/process_tick(seconds_per_tick)
 	if(computer.active_program == src)
 		START_PROCESSING(SSfastprocess, src)

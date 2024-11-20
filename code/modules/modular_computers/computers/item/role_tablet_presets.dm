@@ -219,7 +219,7 @@
 	name = "paramedic PDA"
 	starting_programs = list(
 		/datum/computer_file/program/records/medical,
-		/datum/computer_file/program/lifeline2,
+		/datum/computer_file/program/lifeline,
 	)
 
 /obj/item/modular_computer/pda/viro
