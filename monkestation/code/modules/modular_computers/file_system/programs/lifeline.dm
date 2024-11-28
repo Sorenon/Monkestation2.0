@@ -32,8 +32,6 @@
 	if(.)
 		blueshield = istype(computer, /obj/item/modular_computer/pda/blueshield)
 		START_PROCESSING(SSfastprocess, src)
-		return TRUE
-	return FALSE
 
 /datum/computer_file/program/lifeline/kill_program(mob/user)
 	sensors = list()
