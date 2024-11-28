@@ -118,27 +118,20 @@
 
 		var/turf/sensor_pos = get_turf(tracked_living_mob)
 
-		var/list/crewinfo
+		var/list/crewinfo = list(
+			ref = REF(tracked_living_mob),
+			name = "Unknown",
+			ijob = 81, // UNKNOWN_JOB_ID from crew.dm
+			area = "Unknown",
+			dist = -1, // This value tells the UI that tracking is disabled
+			degrees = 0,
+			zdiff = 0,
+		)
 		if (sensor_level == SENSOR_COORDS)
-			crewinfo = list(
-				ref = REF(tracked_living_mob),
-				name = "Unknown",
-				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
-				area = get_area_name(tracked_living_mob, format_text = TRUE),
-				dist = max(get_dist(pos, sensor_pos), 0),
-				degrees = round(get_angle(pos, sensor_pos)),
-				zdiff = sensor_pos.z-pos.z,
-			)
-		else
-			crewinfo = list(
-				ref = REF(tracked_living_mob),
-				name = "Unknown",
-				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
-				area = "Unknown",
-				dist = -1, // This value tells the UI that tracking is disabled
-				degrees = 0,
-				zdiff = 0,
-			)
+			crewinfo["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
+			crewinfo["dist"] = max(get_dist(pos, sensor_pos), 0)
+			crewinfo["degrees"] = round(get_angle(pos, sensor_pos))
+			crewinfo["zdiff"] = sensor_pos.z-pos.z
 
 		var/obj/item/card/id/id_card = tracked_living_mob.get_idcard(hand_first = FALSE)
 		if(id_card)
