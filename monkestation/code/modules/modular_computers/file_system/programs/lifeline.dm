@@ -46,15 +46,15 @@
 	return ..()
 
 /datum/computer_file/program/lifeline/ui_data(mob/user)
-	var/list/data = list()
-	data["selected"] = selected
-	data["sensors"] = update_sensors()
-	data["settings"] = list(
-		blueshield = blueshield,
-		sortAsc = sort_asc,
-		sortBy = sort_by
+	return list(
+		"selected" = selected,
+		"sensors" = update_sensors(),
+		"settings" = list(
+			"blueshield" = blueshield,
+			"sortAsc" = sort_asc,
+			"sortBy" = sort_by
+		)
 	)
-	return data
 
 /datum/computer_file/program/lifeline/ui_act(action, params, datum/tgui/ui, datum/ui_state/state)
 	switch(action)
