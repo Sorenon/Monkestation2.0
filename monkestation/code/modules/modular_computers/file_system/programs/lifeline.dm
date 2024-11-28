@@ -4,9 +4,9 @@
 	extended_desc = "This program allows for tracking of crew members via their suit sensors."
 	transfer_access = list(ACCESS_MEDICAL)
 	category = PROGRAM_CATEGORY_CREW
-	ui_header = "borg_mon.gif" //DEBUG -- new icon before PR
+	ui_header = "borg_mon.gif" //DEBUG -- new icon before PR (classic)
 	program_icon_state = "radarntos"
-	requires_ntnet = TRUE
+	// requires_ntnet = TRUE -- disabled to be constistent with the paramedic's crew monitor
 	available_on_ntnet = TRUE
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_TABLET
 	size = 5
@@ -32,7 +32,7 @@
 	if(.)
 		blueshield = istype(computer, /obj/item/modular_computer/pda/blueshield)
 		START_PROCESSING(SSfastprocess, src)
-		return
+		return TRUE
 	return FALSE
 
 /datum/computer_file/program/lifeline/kill_program(mob/user)
@@ -111,8 +111,12 @@
 
 	sensors = list()
 	for(var/tracked_mob in GLOB.suit_sensors_list | GLOB.nanite_sensors_list)
+		if(!tracked_mob)
+			stack_trace("Null entry in suit sensors or nanite sensors list.")
+			continue
+
 		var/mob/living/tracked_living_mob = tracked_mob
-		var/sensor_level = tracking_level(tracked_living_mob)
+		var/sensor_level = tracking_level(tracked_living_mob, pos.z)
 		if(sensor_level == SENSOR_OFF)
 			continue
 

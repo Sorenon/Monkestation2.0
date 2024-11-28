@@ -210,7 +210,10 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			continue
 
 		// Machinery and the target should be on the same level or different levels of the same station
-		if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
+		// MONKESTATION EDIT START -- handle stacked z levels that aren't on station
+		// if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS)) - MONKESTATION EDIT ORIGINAL
+		if(pos.z != z && !(z in SSmapping.get_connected_levels(pos.z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
+		// MONKESTATION EDIT END
 			continue
 
 		var/sensor_mode
