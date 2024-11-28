@@ -79,7 +79,7 @@
 		return SENSOR_OFF
 
 	// Machinery and the target should be on the same level or different levels of the same station
-	if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
+	if(pos.z != z && !(z in SSmapping.get_connected_levels(pos.z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
 		return SENSOR_OFF
 
 	// Set sensor level based on whether we're in the nanites list or the suit sensor list.
