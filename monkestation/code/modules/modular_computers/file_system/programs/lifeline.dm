@@ -46,15 +46,15 @@
 	return ..()
 
 /datum/computer_file/program/lifeline/ui_data(mob/user)
-	var/list/data = list()
-	data["selected"] = selected
-	data["sensors"] = update_sensors()
-	data["settings"] = list(
-		blueshield = blueshield,
-		sortAsc = sort_asc,
-		sortBy = sort_by
+	return list(
+		"selected" = selected,
+		"sensors" = update_sensors(),
+		"settings" = list(
+			"blueshield" = blueshield,
+			"sortAsc" = sort_asc,
+			"sortBy" = sort_by
+		)
 	)
-	return data
 
 /datum/computer_file/program/lifeline/ui_act(action, params, datum/tgui/ui, datum/ui_state/state)
 	switch(action)
@@ -79,7 +79,7 @@
 		return SENSOR_OFF
 
 	// Machinery and the target should be on the same level or different levels of the same station
-	if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
+	if(pos.z != z && !(z in SSmapping.get_connected_levels(pos.z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
 		return SENSOR_OFF
 
 	// Set sensor level based on whether we're in the nanites list or the suit sensor list.
@@ -122,27 +122,20 @@
 
 		var/turf/sensor_pos = get_turf(tracked_living_mob)
 
-		var/list/crewinfo
+		var/list/crewinfo = list(
+			ref = REF(tracked_living_mob),
+			name = "Unknown",
+			ijob = 81, // UNKNOWN_JOB_ID from crew.dm
+			area = "Unknown",
+			dist = -1, // This value tells the UI that tracking is disabled
+			degrees = 0,
+			zdiff = 0,
+		)
 		if (sensor_level == SENSOR_COORDS)
-			crewinfo = list(
-				ref = REF(tracked_living_mob),
-				name = "Unknown",
-				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
-				area = get_area_name(tracked_living_mob, format_text = TRUE),
-				dist = max(get_dist(pos, sensor_pos), 0),
-				degrees = round(get_angle(pos, sensor_pos)),
-				zdiff = sensor_pos.z-pos.z,
-			)
-		else
-			crewinfo = list(
-				ref = REF(tracked_living_mob),
-				name = "Unknown",
-				ijob = 81, // UNKNOWN_JOB_ID from crew.dm
-				area = "Unknown",
-				dist = -1, // This value tells the UI that tracking is disabled
-				degrees = 0,
-				zdiff = 0,
-			)
+			crewinfo["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
+			crewinfo["dist"] = max(get_dist(pos, sensor_pos), 0)
+			crewinfo["degrees"] = round(get_angle(pos, sensor_pos))
+			crewinfo["zdiff"] = sensor_pos.z-pos.z
 
 		var/obj/item/card/id/id_card = tracked_living_mob.get_idcard(hand_first = FALSE)
 		if(id_card)
