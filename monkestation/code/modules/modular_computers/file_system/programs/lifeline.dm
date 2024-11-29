@@ -66,18 +66,57 @@
 			blueshield = params["val"]
 	return TRUE
 
+// Copied and modified from "code\game\machinery\computer\crew.dm"
+/datum/computer_file/program/lifeline/proc/tracking_level(mob/living/tracked_living_mob, z)
+	// Check if z-level is correct
+	var/turf/pos = get_turf(tracked_living_mob)
+
+	// Is our target in nullspace for some reason?
+	if(!pos)
+		stack_trace("Tracked mob has no loc and is likely in nullspace: [tracked_living_mob] ([tracked_living_mob.type])")
+		return SENSOR_OFF
+
+	// Machinery and the target should be on the same level or different levels of the same station
+	if(pos.z != z && !(z in SSmapping.get_connected_levels(pos.z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
+		return SENSOR_OFF
+
+	// Set sensor level based on whether we're in the nanites list or the suit sensor list.
+	if(tracked_living_mob in GLOB.nanite_sensors_list)
+		return SENSOR_COORDS
+
+	var/mob/living/carbon/human/tracked_human = tracked_living_mob
+
+	// Check their humanity.
+	if(!ishuman(tracked_human))
+		stack_trace("Non-human mob is in suit_sensors_list: [tracked_living_mob] ([tracked_living_mob.type])")
+		return SENSOR_OFF
+
+	// Check they have a uniform
+	var/obj/item/clothing/under/uniform = tracked_human.w_uniform
+	if (!istype(uniform))
+		stack_trace("Human without a suit sensors compatible uniform is in suit_sensors_list: [tracked_human] ([tracked_human.type]) ([uniform?.type])")
+		return SENSOR_OFF
+
+	// Check if their uniform is in a compatible mode.
+	if (uniform.has_sensor >= HAS_SENSORS)
+		return uniform.sensor_mode
+	return SENSOR_OFF
+
 /datum/computer_file/program/lifeline/proc/update_sensors()
 	var/turf/pos = get_turf(computer)
 	if (world.time <= last_update_time + 3 SECONDS && sensors)
 		return sensors
-	var/nt_net = GLOB.crewmonitor.get_ntnet_wireless_status(pos.z)
 
 	sensors = list()
 	for(var/tracked_mob in GLOB.suit_sensors_list | GLOB.nanite_sensors_list)
-		var/sensor_mode = GLOB.crewmonitor.get_tracking_level(tracked_mob, pos.z, nt_net)
-		if (sensor_mode == SENSOR_OFF)
+		if(!tracked_mob)
+			stack_trace("Null entry in suit sensors or nanite sensors list.")
 			continue
+
 		var/mob/living/tracked_living_mob = tracked_mob
+		var/sensor_level = tracking_level(tracked_living_mob, pos.z)
+		if(sensor_level == SENSOR_OFF)
+			continue
 
 		var/turf/sensor_pos = get_turf(tracked_living_mob)
 
@@ -85,22 +124,16 @@
 			ref = REF(tracked_living_mob),
 			name = "Unknown",
 			ijob = 81, // UNKNOWN_JOB_ID from crew.dm
-			dist = -1, // This value tells the UI that location is disabled
+			area = "Unknown",
+			dist = -1, // This value tells the UI that tracking is disabled
+			degrees = 0,
+			zdiff = 0,
 		)
-
-		if (sensor_pos.z == pos.z || (sensor_pos.z in SSmapping.get_connected_levels(pos.z)))
-			if (sensor_mode == SENSOR_COORDS)
-				crewinfo["zdiff"] = sensor_pos.z-pos.z
-				crewinfo["dist"] = max(get_dist(pos, sensor_pos), 0)
-				crewinfo["degrees"] = round(get_angle(pos, sensor_pos))
-				crewinfo["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
-		else // tracking through NT Net
-			crewinfo["zdiff"] = is_station_level(sensor_pos.z) ? 0 : -1 // 0: on station, -1: mining
-			if (sensor_mode == SENSOR_COORDS)
-				crewinfo["dist"] = -2 // This value tells the UI that tracking is through NT Net
-				crewinfo["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
-			else
-				crewinfo["dist"] = -3 // This value tells the UI that tracking is through NT Net and location is disabled
+		if (sensor_level == SENSOR_COORDS)
+			crewinfo["area"] = get_area_name(tracked_living_mob, format_text = TRUE)
+			crewinfo["dist"] = max(get_dist(pos, sensor_pos), 0)
+			crewinfo["degrees"] = round(get_angle(pos, sensor_pos))
+			crewinfo["zdiff"] = sensor_pos.z-pos.z
 
 		var/obj/item/card/id/id_card = tracked_living_mob.get_idcard(hand_first = FALSE)
 		if(id_card)
@@ -125,7 +158,7 @@
 
 	var/atom/movable/signal = locate(selected) in GLOB.human_list
 	var/turf/here_turf = get_turf(computer)
-	if(GLOB.crewmonitor.get_tracking_level(signal, here_turf.z, nt_net=FALSE) != SENSOR_COORDS)
+	if(tracking_level(signal, here_turf.z) != SENSOR_COORDS)
 		program_icon_state = "[initial(program_icon_state)]lost"
 		if(last_icon_state != program_icon_state)
 			computer.update_appearance()
