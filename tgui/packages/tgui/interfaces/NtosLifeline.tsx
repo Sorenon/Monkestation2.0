@@ -4,7 +4,7 @@ import { Box, Button, Flex, Icon, Input, Stack, Tabs } from '../components';
 
 import { NtosWindow } from '../layouts';
 import { JOB2ICON } from './common/JobToIcon';
-import { jobIsHead, jobToColor } from './CrewConsole';
+import { jobIsHead, jobToColor } from './CrewConsoleNova';
 
 type Data = {
   selected: string;
@@ -81,7 +81,10 @@ const NtosLifelineContent = () => {
     setSortBy(SORT_OPTIONS[idx]);
   };
 
-  const nameSearch = createSearch(searchQuery, (crew: CrewSensor) => crew.name);
+  const nameSearch = createSearch(
+    searchQuery,
+    (crew: CrewSensor) => crew.name + crew.assignment,
+  );
 
   const sorted = sensors
     .filter(nameSearch)
@@ -92,11 +95,8 @@ const NtosLifelineContent = () => {
         (sensor.ijob >= 200 && sensor.ijob < 300),
     )
     .sort((a, b) => {
-      if (a.dist !== -1 && b.dist === -1) {
-        return -1;
-      }
-      if (a.dist === -1 && b.dist !== -1) {
-        return 1;
+      if (a.dist < 0 || b.dist < 0) {
+        return b.dist - a.dist;
       }
       switch (sortBy) {
         case 'name':
@@ -143,7 +143,7 @@ const NtosLifelineContent = () => {
         </Stack.Item>
         <Stack.Item>
           {sorted.map((object, index) => (
-            <CrewTab key={index} object={object} />
+            <CrewTab key={index} sensor={object} />
           ))}
         </Stack.Item>
       </Stack>
@@ -151,16 +151,10 @@ const NtosLifelineContent = () => {
   );
 };
 
-const CrewTab = (props: { object: CrewSensor }) => {
+const CrewTab = (props: { sensor: CrewSensor }) => {
   const { act, data } = useBackend<Data>();
-  const { object } = props;
-  const selected = data.selected === object.ref;
-  let zdiff = '-';
-  if (object.zdiff > 0) {
-    zdiff = '↑';
-  } else if (object.zdiff < 0) {
-    zdiff = '↓';
-  }
+  const { sensor } = props;
+  const selected = data.selected === sensor.ref;
 
   return (
     <Tabs.Tab
@@ -169,7 +163,7 @@ const CrewTab = (props: { object: CrewSensor }) => {
       selected={selected}
       onClick={() => {
         act('select', {
-          ref: object.ref,
+          ref: sensor.ref,
         });
       }}
       style={{ margin: '2px 2px 0px 0px' }}
@@ -181,8 +175,8 @@ const CrewTab = (props: { object: CrewSensor }) => {
       <Box style={{ display: 'flex' }}>
         <Box>
           <Icon
-            color={jobToColor(object.ijob)}
-            name={JOB2ICON[object.trim] || 'question'}
+            color={jobToColor(sensor.ijob)}
+            name={JOB2ICON[sensor.trim] || 'question'}
             width="25px"
             style={{ float: 'left', padding: '4px' }}
           />
@@ -190,28 +184,56 @@ const CrewTab = (props: { object: CrewSensor }) => {
         <Box>
           <span
             style={{
-              color: jobToColor(object.ijob),
-              ...(jobIsHead(object.ijob) && { 'font-weight': 'bold' }),
+              color: jobToColor(sensor.ijob),
+              ...(jobIsHead(sensor.ijob) && { 'font-weight': 'bold' }),
             }}
           >
-            {object.name} ({object.assignment})
+            {sensor.name} ({sensor.assignment})
           </span>
           <br />
-          {(object.dist !== -1 && (
-            <span>
-              {object.dist > 0 && (
-                <Icon
-                  mr={0.2}
-                  size={0.8}
-                  name="arrow-up"
-                  rotation={object.degrees}
-                />
-              )}
-              {object.dist}m {zdiff} [{object.area}]
-            </span>
-          )) || <Icon name="question" size={0.9} />}
+          <SensorLocation sensor={sensor} />
         </Box>
       </Box>
     </Tabs.Tab>
   );
+};
+
+const SensorLocation = (props: { sensor: CrewSensor }) => {
+  const { sensor } = props;
+  const dist = sensor.dist;
+
+  if (dist >= 0) {
+    let zdiff = '-';
+    if (sensor.zdiff > 0) {
+      zdiff = '↑'.repeat(sensor.zdiff);
+    } else if (sensor.zdiff < 0) {
+      zdiff = '↓'.repeat(-sensor.zdiff);
+    }
+    return (
+      <span>
+        {sensor.dist > 0 && (
+          <Icon mr={0.2} size={0.8} name="arrow-up" rotation={sensor.degrees} />
+        )}
+        {sensor.dist}m {zdiff} [{sensor.area}]
+      </span>
+    );
+  }
+  if (dist === -1) {
+    return <Icon name="question" size={0.9} />;
+  }
+  const zdiff =
+    sensor.zdiff === 0 ? (
+      <Icon name="house" size={0.9} />
+    ) : (
+      <Icon name="volcano" size={0.9} />
+    );
+
+  if (dist === -2) {
+    return (
+      <span>
+        {zdiff} [{sensor.area}]
+      </span>
+    );
+  }
+  return { ...zdiff };
 };

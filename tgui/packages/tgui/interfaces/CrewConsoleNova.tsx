@@ -1,7 +1,9 @@
-import { Box, Button, Icon, Input, Section, Table } from '../components';
+// THIS IS A NOVA SECTOR UI FILE
 import { BooleanLike } from 'common/react';
 import { createSearch } from 'common/string';
+
 import { useBackend, useLocalState } from '../backend';
+import { Box, Button, Icon, Input, Section, Table } from '../components';
 import { COLORS } from '../constants';
 import { Window } from '../layouts';
 
@@ -26,14 +28,17 @@ const STAT_DEAD = 4;
 
 const SORT_OPTIONS = ['health', 'ijob', 'name', 'area'];
 
-const jobIsHead = (jobId: number) => jobId % 10 === 0;
+export const jobIsHead = (jobId: number) => jobId % 10 === 0;
 
-const jobToColor = (jobId: number) => {
+export const jobToColor = (jobId) => {
   if (jobId === 0) {
     return COLORS.department.captain;
   }
   if (jobId >= 10 && jobId < 20) {
     return COLORS.department.security;
+  }
+  if (jobId === 998) {
+    return COLORS.department.prisoner;
   }
   if (jobId >= 20 && jobId < 30) {
     return COLORS.department.medbay;
@@ -47,7 +52,7 @@ const jobToColor = (jobId: number) => {
   if (jobId >= 50 && jobId < 60) {
     return COLORS.department.cargo;
   }
-  if (jobId >= 60 && jobId < 200) {
+  if (jobId >= 60 && jobId < 80) {
     return COLORS.department.service;
   }
   if (jobId >= 200 && jobId < 240) {
@@ -108,7 +113,7 @@ const HealthStat = (props: HealthStatProps) => {
   );
 };
 
-export const CrewConsole = () => {
+export const CrewConsoleNova = () => {
   return (
     <Window title="Crew Monitor" width={600} height={600}>
       <Window.Content scrollable>
@@ -124,6 +129,7 @@ type CrewSensor = {
   name: string;
   assignment: string | undefined;
   ijob: number;
+  is_robot: any;
   life_status: number;
   oxydam: number;
   toxdam: number;
@@ -150,6 +156,10 @@ const CrewTable = () => {
     '',
   );
   const [sortBy, setSortBy] = useLocalState<string>('sortBy', SORT_OPTIONS[0]);
+  const [filterTracking, setfilterTracking] = useLocalState<boolean>(
+    'filterTracking',
+    false,
+  );
 
   const cycleSortBy = () => {
     let idx = SORT_OPTIONS.indexOf(sortBy) + 1;
@@ -157,22 +167,31 @@ const CrewTable = () => {
     setSortBy(SORT_OPTIONS[idx]);
   };
 
-  const nameSearch = createSearch(searchQuery, (crew: CrewSensor) => crew.name);
+  const nameSearch = createSearch(
+    searchQuery,
+    (crew: CrewSensor) => crew.name + crew.assignment,
+  );
 
-  const sorted = sensors.filter(nameSearch).sort((a, b) => {
-    switch (sortBy) {
-      case 'name':
-        return sortAsc ? +(a.name > b.name) : +(b.name > a.name);
-      case 'ijob':
-        return sortAsc ? a.ijob - b.ijob : b.ijob - a.ijob;
-      case 'health':
-        return sortAsc ? healthSort(a, b) : healthSort(b, a);
-      case 'area':
-        return sortAsc ? areaSort(a, b) : areaSort(b, a);
-      default:
-        return 0;
-    }
-  });
+  const sorted = sensors
+    .filter(nameSearch)
+    .filter(
+      (sensor) =>
+        !filterTracking || (sensor.area !== '~' && sensor.area !== undefined),
+    )
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return sortAsc ? +(a.name > b.name) : +(b.name > a.name);
+        case 'ijob':
+          return sortAsc ? a.ijob - b.ijob : b.ijob - a.ijob;
+        case 'health':
+          return sortAsc ? healthSort(a, b) : healthSort(b, a);
+        case 'area':
+          return sortAsc ? areaSort(a, b) : areaSort(b, a);
+        default:
+          return 0;
+      }
+    });
 
   return (
     <Section
@@ -191,12 +210,20 @@ const CrewTable = () => {
               setSearchQuery((e.target as HTMLTextAreaElement).value)
             }
           />
+          <Button onClick={() => setfilterTracking(!filterTracking)}>
+            {filterTracking ? (
+              <Icon style={{ marginLeft: '2px' }} name="location-dot" />
+            ) : (
+              'All'
+            )}
+          </Button>
         </>
       }
     >
       <Table>
         <Table.Row>
           <Table.Cell bold>Name</Table.Cell>
+          <Table.Cell bold collapsing textAlign="center" />
           <Table.Cell bold collapsing />
           <Table.Cell bold collapsing textAlign="center">
             Vitals
@@ -230,6 +257,7 @@ const CrewTableEntry = (props: CrewTableEntryProps) => {
     name,
     assignment,
     ijob,
+    is_robot,
     life_status,
     oxydam,
     toxdam,
@@ -244,6 +272,9 @@ const CrewTableEntry = (props: CrewTableEntryProps) => {
       <Table.Cell bold={jobIsHead(ijob)} color={jobToColor(ijob)}>
         {name}
         {assignment !== undefined ? ` (${assignment})` : ''}
+      </Table.Cell>
+      <Table.Cell collapsing textAlign="center">
+        {is_robot ? <Icon name="wrench" color="#B7410E" size={1} /> : ''}
       </Table.Cell>
       <Table.Cell collapsing textAlign="center">
         {oxydam !== undefined ? (

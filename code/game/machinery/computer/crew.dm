@@ -44,6 +44,7 @@
 	. += create_table_notices(list(
 		"name",
 		"job",
+		"is_robot", //MONKESTATION EDIT ADDITION - Displaying robotic species Icon
 		"life_status",
 		"suffocation",
 		"toxin",
@@ -64,6 +65,7 @@
 		var/list/entry = list()
 		entry["name"] = player_record["name"]
 		entry["job"] = player_record["assignment"]
+		entry["is_robot"] = player_record["is_robot"] //MONKESTATION EDIT ADDITION - Displaying robotic species Icon
 		entry["life_status"] = player_record["life_status"]
 		entry["suffocation"] = player_record["oxydam"]
 		entry["toxin"] = player_record["toxdam"]
@@ -168,7 +170,7 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 /datum/crewmonitor/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if (!ui)
-		ui = new(user, src, "CrewConsole")
+		ui = new(user, src, "CrewConsoleNova") // MONKESTATION EDIT CHANGE - ORIGINAL: ui = new(user, src, "CrewConsole")
 		ui.open()
 
 /datum/crewmonitor/proc/show(mob/M, source)
@@ -192,9 +194,14 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 /datum/crewmonitor/proc/update_data(z)
 	if(data_by_z["[z]"] && last_update["[z]"] && world.time <= last_update["[z]"] + SENSORS_UPDATE_PERIOD)
 		return data_by_z["[z]"]
+	// MONKESTATION EDIT START
+	var/nt_net = get_ntnet_wireless_status(z)
+	// MONKESTATION EDIT END
 
 	var/list/results = list()
 	for(var/tracked_mob in GLOB.suit_sensors_list | GLOB.nanite_sensors_list)
+		// MONKESTATION EDIT START
+		/* original - modified and moved into get_tracking_level
 		if(!tracked_mob)
 			stack_trace("Null entry in suit sensors or nanite sensors list.")
 			continue
@@ -210,10 +217,7 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			continue
 
 		// Machinery and the target should be on the same level or different levels of the same station
-		// MONKESTATION EDIT START -- handle stacked z levels that aren't on station
-		// if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS)) - MONKESTATION EDIT ORIGINAL
-		if(pos.z != z && !(z in SSmapping.get_connected_levels(pos.z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
-		// MONKESTATION EDIT END
+		if(pos.z != z && (!is_station_level(pos.z) || !is_station_level(z)) && !HAS_TRAIT(tracked_living_mob, TRAIT_MULTIZ_SUIT_SENSORS))
 			continue
 
 		var/sensor_mode
@@ -241,6 +245,12 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 				continue
 
 			sensor_mode = uniform.sensor_mode
+		*/
+		var/sensor_mode = get_tracking_level(tracked_mob, z, nt_net)
+		if (sensor_mode == SENSOR_OFF)
+			continue
+		var/mob/living/tracked_living_mob = tracked_mob
+		// MONKESTATION EDIT END
 
 		// The entry for this human
 		var/list/entry = list(
@@ -257,6 +267,11 @@ GLOBAL_DATUM_INIT(crewmonitor, /datum/crewmonitor, new)
 			var/trim_assignment = id_card.get_trim_assignment()
 			if (jobs[trim_assignment] != null)
 				entry["ijob"] = jobs[trim_assignment]
+
+		// MONKESTATION EDIT ADDITION START - Checking for robotic race
+		if (isipc(tracked_living_mob))
+			entry["is_robot"] = TRUE
+		// MONKESTATION EDIT ADDITION END
 
 		// Current status
 		if (sensor_mode >= SENSOR_LIVING)
