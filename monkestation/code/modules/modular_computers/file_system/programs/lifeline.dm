@@ -125,7 +125,7 @@
 
 	var/atom/movable/signal = locate(selected) in GLOB.human_list
 	var/turf/here_turf = get_turf(computer)
-	if(GLOB.crewmonitor.get_tracking_level(signal, here_turf.z, nt_net=FALSE) != SENSOR_COORDS)
+	if(GLOB.crewmonitor.get_tracking_level(signal, here_turf.z, nt_net=FALSE, validation=FALSE) != SENSOR_COORDS)
 		program_icon_state = "[initial(program_icon_state)]lost"
 		if(last_icon_state != program_icon_state)
 			computer.update_appearance()
