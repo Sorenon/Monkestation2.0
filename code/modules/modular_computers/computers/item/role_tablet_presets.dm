@@ -140,6 +140,9 @@
 		/datum/computer_file/program/records/security,
 		/datum/computer_file/program/crew_manifest,
 		/datum/computer_file/program/robocontrol,
+		//MONKESTATION EDIT START
+		/datum/computer_file/program/lifeline
+		//MONKESTATION EDIT END
 	)
 
 /obj/item/modular_computer/pda/warden
