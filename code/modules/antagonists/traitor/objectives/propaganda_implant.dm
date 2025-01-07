@@ -1,3 +1,5 @@
+// Category
+
 /datum/traitor_objective_category/propaganda_implant
 	name = "Propaganda Implanter"
 	objectives = list(
@@ -7,17 +9,18 @@
 	)
 	weight = OBJECTIVE_WEIGHT_UNLIKELY
 
+// Objective
+
 /datum/traitor_objective/target_player/propaganda_implant
-	name = "Implant %TARGET% the %JOB TITLE%"
-	description = "%TARGET% messed with the wrong people. Steal their eyes to teach them a lesson. You will be provided an experimental eyesnatcher device to aid you in your mission."
+	name = "Implant %TARGET% the %JOB TITLE% with a propaganda chip"
+	description = "%TARGET% has been too confident or something. Implant them with a progaganda chip to upset them or something."
 
 	progression_minimum = 10 MINUTES
 	progression_maximum = 50 MINUTES
 
 	progression_reward = list(3 MINUTES, 6 MINUTES)
-	telecrystal_reward = 1
+	telecrystal_reward = list(0, 1)
 
-	duplicate_type = /datum/traitor_objective/target_player/propaganda_implant
 	var/spawned_implanter = FALSE
 
 /datum/traitor_objective/target_player/propaganda_implant/heads
@@ -26,7 +29,7 @@
 
 /datum/traitor_objective/target_player/propaganda_implant/nt_rep
 	progression_reward = list(8 MINUTES, 16 MINUTES)
-	telecrystal_reward = list(3,4)
+	telecrystal_reward = 3
 
 /datum/traitor_objective/target_player/propaganda_implant/supported_configuration_changes()
 	. = ..()
@@ -112,14 +115,9 @@
 
 	replace_in_name("%TARGET%", target_mind.name)
 	replace_in_name("%JOB TITLE%", target_mind.assigned_role.title)
-	RegisterSignal(target, COMSIG_IMPLANT_IMPLANTED, PROC_REF(check_implant))
+	target.AddComponent(/datum/component/propaganda_target, src)
 	AddComponent(/datum/component/traitor_objective_register, target, fail_signals = list(COMSIG_QDELETING))
 	return TRUE
-
-/datum/traitor_objective/target_player/propaganda_implant/proc/check_implant(obj/item/implant/implant, mob/living/target, mob/user, silent = FALSE, force = FALSE)
-	SIGNAL_HANDLER
-	if(istype(implant, /obj/item/implant/sponsor_emagged))
-		succeed_objective()
 
 /datum/traitor_objective/target_player/propaganda_implant/generate_ui_buttons(mob/user)
 	var/list/buttons = list()
@@ -134,6 +132,53 @@
 			if(spawned_implanter)
 				return
 			spawned_implanter = TRUE
-			var/obj/item/implanter/sponsor_emagged/implanter = new(user.drop_location())
+			var/obj/item/implanter/syndi_propaganda_slow/implanter = new(user.drop_location())
 			user.put_in_hands(implanter)
 			implanter.balloon_alert(user, "the implanter materializes in your hand")
+
+// Target component
+
+/datum/component/propaganda_target
+	dupe_mode = COMPONENT_DUPE_ALLOWED
+	var/datum/traitor_objective/objective
+
+/datum/component/propaganda_target/Initialize(datum/traitor_objective/objective)
+	. = ..()
+	src.objective = objective
+
+/datum/component/propaganda_target/proc/implanted()
+	objective.succeed_objective()
+	qdel(src)
+
+// Implanter
+
+/obj/item/implanter/syndi_propaganda_slow
+	name = "implanter (mindshield)"
+	desc = "modified to tap into the syndicate propaganda network, won't work through thick clothing"
+	w_class = WEIGHT_CLASS_TINY
+	imp_type = /obj/item/implant/syndi_propaganda
+
+/obj/item/implanter/syndi_propaganda_slow/attack(mob/living/target, mob/user)
+	if(!(istype(target) && user && imp))
+		return
+
+	if(!target.try_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
+		return
+
+	if(target != user)
+		target.visible_message(span_warning("[user] is attempting to implant [target]."))
+		if(!do_after(user, 10 SECONDS, target, extra_checks = CALLBACK(target, TYPE_PROC_REF(/mob/living, try_inject), user, null, INJECT_TRY_SHOW_ERROR_MESSAGE)))
+			return
+
+	if(!(src && imp))
+		return
+
+	if(imp.implant(target, user))
+		if (target == user)
+			to_chat(user, span_notice("You implant yourself."))
+		else
+			target.visible_message(span_notice("[user] implants [target]."), span_notice("[user] implants you."))
+		imp = null
+		update_appearance()
+	else
+		to_chat(user, span_warning("[src] fails to implant [target]."))

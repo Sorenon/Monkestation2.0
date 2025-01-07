@@ -1,6 +1,6 @@
 /datum/quirk/sponsor
 	name = "Corporate Sponsor"
-	desc = "The station's just full of free stuff!  Nobody would notice if you just... took it, right?"
+	desc = "Hooked up to the NT Advertisement service. Could be to pay off a debt, for easy money or part of a coorporate rehabilitation programme."
 	value = -2
 	icon = FA_ICON_MONEY_BILL
 

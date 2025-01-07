@@ -10,7 +10,7 @@
 	mood_change = -20
 
 /datum/mood_event/syndi_propaganda
-	description = "The Syndicate propaganda is getting through to me."
+	description = "Hearing Syndicate propaganda is unnerving."
 	mood_change = -1
 	timeout = 4 MINUTES
 
@@ -20,4 +20,4 @@
 
 /datum/mood_event/syndi_propaganda/authority
 	description = "The Syndicate propaganda might be corrupting the rest of the crew."
-	timeout = 1 MINUTE
+	timeout = 2 MINUTE

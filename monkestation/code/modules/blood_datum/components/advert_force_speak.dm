@@ -29,7 +29,9 @@
 	var/syndi = HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT_SYNDI)
 	var/implanted = syndi || HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT)
 	var/bad_speak = !source.can_speak() || HAS_TRAIT(source, TRAIT_ANXIOUS) || HAS_TRAIT(source, TRAIT_SOFTSPOKEN)
-	if (HAS_TRAIT(source, TRAIT_SIGN_LANG))
+	if (!bad_speak && !source.can_speak_language(/datum/language/common))
+		bad_speak = TRUE
+	else if (HAS_TRAIT(source, TRAIT_SIGN_LANG))
 		bad_speak = FALSE
 
 	var/list/ad_list = syndi ? GLOB.advertisements.syndi_ads : GLOB.advertisements.nt_ads
@@ -55,7 +57,7 @@
 	if (HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT))
 		return
 
-	for (var/obj/item/implant/sponsor_emagged/implant in source.implants)
+	for (var/obj/item/implant/syndi_propaganda/implant in source.implants)
 		implant.uses -= 1
 		if (implant.uses <= 0)
 			qdel(implant)

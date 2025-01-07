@@ -1,7 +1,7 @@
 /obj/item/implant/sponsor
-	name = "sponsor implant"
-	desc = "Protects against brainwashing."
+	name = "sponsorship implant"
 	actions_types = null
+	allow_multiple = TRUE
 
 /obj/item/implant/sponsor/implant(mob/living/target, mob/user, silent = FALSE, force = FALSE)
 	. = ..()
@@ -19,19 +19,21 @@
 	REMOVE_TRAIT(target, TRAIT_SPONSOR_IMPLANT, REF(src))
 	return TRUE
 
-/// Kit
+// Kit
 
 /obj/item/implanter/sponsor
-	name = "implanter (sponsor)"
+	name = "implanter (sponsorship)"
+	desc = "Makes you say ads for a small reward. NT Advertisement service." // yup
 	imp_type = /obj/item/implant/sponsor
 
 /obj/item/implantcase/sponsor
-	name = "implant case - 'Sponsor'"
-	desc = "A glass case containing a sponsor implant."
+	name = "implant case - 'Sponsorship'"
+	desc = "A glass case containing a sponsor implant." // yup
 	imp_type = /obj/item/implant/sponsor
 
 /obj/item/storage/lockbox/sponsor
-	name = "lockbox of sponsor implants"
+	name = "lockbox of sponsorship implants"
+	desc = "A locked box. requires command access to open. contains sponsorship implants which Makes you say ads for a small reward. NT Advertisement service." // yup
 	req_access = list(ACCESS_COMMAND)
 
 /obj/item/storage/lockbox/sponsor/PopulateContents()
@@ -41,22 +43,23 @@
 
 // Traitor Varient
 
-/obj/item/implant/sponsor_emagged
-	name = "hacked sponsor implant"
-	desc = "modified to tap into the syndicate propaganda network, limited number of uses unless paired victim already has NT implant"
+/obj/item/implant/syndi_propaganda
+	name = "hacked sponsorship implant"
 	actions_types = null
 	implant_color = "r"
-	uses = 7
+	allow_multiple = TRUE
 
-/obj/item/implant/sponsor_emagged/implant(mob/living/target, mob/user, silent = FALSE, force = FALSE)
+/obj/item/implant/syndi_propaganda/implant(mob/living/target, mob/user, silent = FALSE, force = FALSE)
 	. = ..()
 	if(!.)
 		return FALSE
 	target.AddComponentFrom(src, /datum/component/advert_force_speak)
 	ADD_TRAIT(target, TRAIT_SPONSOR_IMPLANT_SYNDI, REF(src))
+	for (var/datum/component/propaganda_target/objective in target.GetComponents(/datum/component/propaganda_target))
+		objective.implanted()
 	return TRUE
 
-/obj/item/implant/sponsor_emagged/removed(mob/target, silent = FALSE, special = FALSE)
+/obj/item/implant/syndi_propaganda/removed(mob/target, silent = FALSE, special = FALSE)
 	. = ..()
 	if(!.)
 		return FALSE
@@ -64,21 +67,22 @@
 	REMOVE_TRAIT(target, TRAIT_SPONSOR_IMPLANT_SYNDI, REF(src))
 	return TRUE
 
-/// Kit
+// Traitor Kit
 
-/obj/item/implanter/sponsor_emagged
-	name = "implanter (hacked sponsor)"
-	imp_type = /obj/item/implant/sponsor_emagged
-
-/obj/item/implantcase/sponsor_emagged
-	name = "implant case - 'hacked Sponsor'"
+/obj/item/implantcase/syndi_propaganda
+	name = "implant case - 'hacked sponsorship'"
 	desc = "A glass case containing a hacked sponsor implant."
-	imp_type = /obj/item/implant/sponsor_emagged
+	imp_type = /obj/item/implant/syndi_propaganda
 
-/obj/item/storage/box/syndie_kit/sponsor
+/obj/item/implanter/syndi_propaganda
+	name = "implanter (mindshield)"
+	desc = "modified to tap into the syndicate propaganda network"
+	imp_type = /obj/item/implant/syndi_propaganda
+
+/obj/item/storage/box/syndie_kit/syndi_propaganda
 	name = "hacked sponsor implants"
 
-/obj/item/storage/box/syndie_kit/sponsor/PopulateContents()
+/obj/item/storage/box/syndie_kit/syndi_propaganda/PopulateContents()
 	for(var/i in 1 to 3)
-		new /obj/item/implantcase/sponsor_emagged(src)
-	new /obj/item/implanter/sponsor_emagged(src)
+		new /obj/item/implantcase/syndi_propaganda(src)
+	new /obj/item/implanter/syndi_propaganda(src)

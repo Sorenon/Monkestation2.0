@@ -23,3 +23,11 @@
 	cost = 1
 	purchasable_from = ALL
 	cant_discount = TRUE
+
+/datum/uplink_item/badass/syndi_propaganda
+	name = "Propaganda n all that"
+	desc = "A box of leaked stickers from the NT production line."
+	item = /obj/item/storage/box/syndie_kit/syndi_propaganda
+	cost = 1
+	purchasable_from = ALL
+	cant_discount = TRUE
