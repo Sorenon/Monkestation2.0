@@ -1,6 +1,6 @@
 /datum/component/advert_force_speak
 	dupe_mode = COMPONENT_DUPE_SOURCES
-	var/next_time = INFINITY
+	COOLDOWN_DECLARE(message_cooldown)
 	var/mob/living/speaker_implant/speaker_implant
 
 /datum/component/advert_force_speak/Initialize()
@@ -9,7 +9,8 @@
 
 /datum/component/advert_force_speak/on_source_add(source, delay=0)
 	. = ..()
-	next_time = min(next_time, world.time + delay)
+	if (COOLDOWN_FINISHED(src, message_cooldown) || COOLDOWN_TIMELEFT(src, message_cooldown) > delay)
+		COOLDOWN_START(src, message_cooldown, delay)
 
 /datum/component/advert_force_speak/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_LIVING_LIFE, PROC_REF(on_life))
@@ -23,11 +24,11 @@
 
 /datum/component/advert_force_speak/proc/on_life(mob/living/source, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
-	if(world.time >= next_time && source.stat < UNCONSCIOUS)
-		var/delay = rand(2 MINUTES) + 4 MINUTES
+	if(COOLDOWN_FINISHED(src, message_cooldown) && source.stat < UNCONSCIOUS)
+		var/delay = rand(4 MINUTES, 6 MINUTES)
 		if (HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT_SYNDI))
 			delay *= 2
-		next_time = world.time + delay
+		COOLDOWN_START(src, message_cooldown, delay)
 		INVOKE_ASYNC(src, PROC_REF(speak), source)
 
 /datum/component/advert_force_speak/proc/speak(mob/living/source)
@@ -62,8 +63,6 @@
 /datum/component/advert_force_speak/proc/speaker_implant_say(mob/living/source, message, sponsor, spans)
 	if(QDELETED(speaker_implant))
 		speaker_implant = new(source)
-		speaker_implant.owner = source
-		speaker_implant.bubble_icon = "machine"
 
 	speaker_implant.body_maptext_height_offset = source.body_maptext_height_offset
 	speaker_implant.say(message, language=/datum/language/common, forced="sponsorship ([sponsor])", spans=spans)
@@ -71,6 +70,10 @@
 /mob/living/speaker_implant
 	name = "speaker implant"
 	var/mob/living/owner
+
+/mob/living/speaker_implant/New(mob/living/owner)
+	src.owner = owner
+	src.bubble_icon = "machine"
 
 /mob/living/speaker_implant/GetVoice()
 	if(owner == src)
@@ -92,6 +95,10 @@
 		else
 			speak_sound = voice_type2sound[voice_type][voice_type]
 		playsound(src, speak_sound, 300, 1, SHORT_RANGE_SOUND_EXTRARANGE-2, falloff_exponent = 0, pressure_affected = FALSE, ignore_walls = FALSE, use_reverb = FALSE, mixer_channel = CHANNEL_MOB_SOUNDS)
+
+/mob/living/speaker_implant/Destroy()
+	owner = null
+	return ..()
 
 GLOBAL_DATUM_INIT(advertisements, /datum/advertisements, new)
 

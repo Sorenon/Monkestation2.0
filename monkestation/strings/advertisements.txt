@@ -31,11 +31,12 @@ BLAST OFF with the rapid speeds of Donk Co. cargo shuttles!
 Turbocharge your mind and body with all the 0% natural flavours Donk Co. has to offer!
 Take your armoury to the next level with the new line of Donksoft replica firearms!
 --------------------------------------------------------------------------------------------------------------
-	name: SpaceCigs Corp
+	name: ShadyCigs
 Space cigs taste good like a cigarette should.
 Don't believe the reports, smoke today!
 For each friend you get hooked on smoking, ShadyCigs will gift you a +free+ pack of cigarettes!
 Feeling lost? Nothing going your way? Smoking can give you a new lease on life.
+Nobody likes a quitter. But if you're determined to stop smoking, give ShadyCigs' Nicotine Gum a shot!
 --------------------------------------------------------------------------------------------------------------
 	name: SpaceBooze Corp
 Alcohol, the one friend who will never leave you!
@@ -73,7 +74,7 @@ Floran sells weapons! You buy weapons! Everybody happy! Good!
 Floran sells meats! They are good meats! Yum!
 --------------------------------------------------------------------------------------------------------------
 	name: Interdyne Pharmaceutics
-You might be able to dodge taxes, but you can't dodge an supernova. Buy a clone license before it's too late.
+You might be able to dodge taxes, but you can't dodge an supernova. Buy a clone license before it's too late!
 Tackle ape infestations with ease with a Rapid Tranquiliser Gun from Interdyne Pharmaceutics.
 --------------------------------------------------------------------------------------------------------------
 	name: Elaine Anders
