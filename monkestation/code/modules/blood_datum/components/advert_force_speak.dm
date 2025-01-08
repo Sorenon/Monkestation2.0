@@ -36,10 +36,10 @@
 	var/syndi = HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT_SYNDI)
 	var/implanted = syndi || HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT)
 	var/bad_speak = !source.can_speak() || HAS_TRAIT(source, TRAIT_ANXIOUS) || HAS_TRAIT(source, TRAIT_SOFTSPOKEN)
-	if (!bad_speak && !source.can_speak_language(/datum/language/common))
+	if (!source.can_speak_language(/datum/language/common))
 		bad_speak = TRUE
-	else if (HAS_TRAIT(source, TRAIT_SIGN_LANG))
-		bad_speak = FALSE
+	// else if (HAS_TRAIT(source, TRAIT_SIGN_LANG))
+	// 	bad_speak = FALSE
 
 	var/list/ad_list = syndi ? GLOB.advertisements.syndi_ads : GLOB.advertisements.nt_ads
 	var/ad_idx = rand(1, ad_list.len / 2) * 2
@@ -118,7 +118,7 @@ GLOBAL_DATUM_INIT(advertisements, /datum/advertisements, new)
 		if (line[1] == "\t")
 			var/delimiter_idx = findtext(line, ":", 2)
 			if (delimiter_idx == 0)
-				stack_trace("No delimiter")
+				stack_trace("No delimiter in line '[line]' in [file_name]")
 				continue
 			var/key = copytext(line, 2, delimiter_idx)
 			var/value = trim(copytext(line, delimiter_idx+1))
@@ -127,7 +127,7 @@ GLOBAL_DATUM_INIT(advertisements, /datum/advertisements, new)
 				continue
 			if (key == "desc")
 				continue
-			stack_trace("Unknown key TODO TODOa")
+			stack_trace("Unknown key '[key]' in [file_name]")
 			continue
 		advertisements.Add(name)
 		advertisements.Add(trim(line))

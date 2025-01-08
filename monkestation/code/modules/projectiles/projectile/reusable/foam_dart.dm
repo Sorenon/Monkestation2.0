@@ -1,10 +1,7 @@
 /obj/projectile/bullet/reusable/foam_dart/handle_drop(cancel=TRUE)
 	if(cancel)
 		return
-	if(!dropped)
-		var/turf/T = get_turf(src)
-		new ammo_type(T)
-		dropped = TRUE
+	. = ..()
 
 /obj/projectile/bullet/reusable/foam_dart/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()

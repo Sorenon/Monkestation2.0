@@ -27,12 +27,14 @@
 
 /obj/item/implanter/sponsorship
 	name = "implanter (sponsorship)"
-	desc = "Creates a neural connection directly from the NT Advertisement Network to the target's mouth or an implanted speaker. Each ad is roughly 5 mins apart and has a revenue of 5 credits."
+	desc = "Creates a neural connection directly from the NT Advertisement Network to the target's mouth or an implanted speaker. \
+		Each ad is roughly 5 mins apart and has a revenue of 5 credits."
 	imp_type = /obj/item/implant/sponsorship
 
 /obj/item/implantcase/sponsorship
 	name = "implant case - 'Sponsorship'"
-	desc = "Creates a neural connection directly from the NT Advertisement Network to the target's mouth or an implanted speaker. Each ad is roughly 5 mins apart and has a revenue of 5 credits."
+	desc = "Creates a neural connection directly from the NT Advertisement Network to the target's mouth or an implanted speaker. \
+		Each ad is roughly 5 mins apart and has a revenue of 5 credits."
 	imp_type = /obj/item/implant/sponsorship
 
 /obj/item/storage/lockbox/sponsorship
@@ -79,7 +81,8 @@
 
 /obj/item/implantcase/syndi_propaganda
 	name = "implant case - 'syndicate propaganda'"
-	desc = "Creates a neural connection directly from the Syndicate Propaganda Network to the target's mouth or an implanted speaker. Each message is roughly 10 mins apart and has a revenue of -40 credits. Emag to retune into the NT Advertisement Network."
+	desc = "Creates a neural connection directly from the Syndicate Propaganda Network to the target's mouth or an implanted speaker. \
+		Each message is roughly 10 mins apart and has a revenue of -40 credits. Emag to retune into the NT Advertisement Network."
 	imp_type = /obj/item/implant/syndi_propaganda
 
 /obj/item/implanter/syndi_propaganda

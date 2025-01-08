@@ -30,7 +30,7 @@
 /datum/surgery_step/extract_implant/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/surgery/surgery)
 	for(var/obj/item/object in target.implants)
 		implant = object
-		// MONKESTATION REMOVAL START - Last-in, first-out
+		// MONKESTATION REMOVAL START - Make implant removal LIFO
 		// break
 		// MONKESTATION REMOVAL END
 	if(implant)
