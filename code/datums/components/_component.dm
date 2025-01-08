@@ -406,7 +406,7 @@
 	if(!old_component && !QDELETED(new_component)) // Nothing related to duplicate components happened and the new component is healthy
 		// MONKESTATION EDIT START - fix COMPONENT_DUPE_SOURCES duplicating components instead of adding to the list of sources
 		if(uses_sources) // make sure they have the source added if they use sources
-			new_component.on_source_add(source)
+			new_component.on_source_add(arglist(list(source) + raw_args.Copy(2)))
 		// MONKESTATION EDIT END
 		SEND_SIGNAL(src, COMSIG_COMPONENT_ADDED, new_component)
 		return new_component

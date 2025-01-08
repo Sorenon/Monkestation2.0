@@ -1,51 +1,72 @@
 // Category
 
 /datum/traitor_objective_category/propaganda_implant
-	name = "Propaganda Implanter"
+	name = "Propaganda Implant"
 	objectives = list(
-		/datum/traitor_objective/target_player/propaganda_implant = 1,
-		/datum/traitor_objective/target_player/propaganda_implant/heads = 1,
-		/datum/traitor_objective/target_player/propaganda_implant/nt_rep = 0.5,
+		/datum/traitor_objective/propaganda_implant/common = 1,
+		/datum/traitor_objective/propaganda_implant/authority = 1,
+		/datum/traitor_objective/propaganda_implant/nt_rep = 0.25,
 	)
 	weight = OBJECTIVE_WEIGHT_UNLIKELY
 
 // Objective
 
-/datum/traitor_objective/target_player/propaganda_implant
-	name = "Implant %TARGET% the %JOB TITLE% with a propaganda chip"
-	description = "%TARGET% has been too confident or something. Implant them with a progaganda chip to upset them or something."
+/datum/traitor_objective/propaganda_implant
+	name = "Inject %TARGET% the %JOB TITLE% with a propaganda implant"
+	description = "%TARGET% has been identified as a good target for spreading propaganda. You will be provided with a compacted propaganda implanter to inject them with. Due its reduced size it is unable to inject through thick clothing and takes 10 seconds to use. Additional implants can be purchased if desired."
 
-	progression_minimum = 10 MINUTES
-	progression_maximum = 50 MINUTES
+	abstract_type = /datum/traitor_objective/propaganda_implant
 
-	progression_reward = list(3 MINUTES, 6 MINUTES)
-	telecrystal_reward = list(0, 1)
-
+	var/datum/mind/target_mind
 	var/spawned_implanter = FALSE
 
-/datum/traitor_objective/target_player/propaganda_implant/heads
+	// The code below is for limiting how often you can get this objective. You will get this objective at a maximum of maximum_objectives_in_period every objective_period
+	/// The objective period at which we consider if it is an 'objective'. Set to 0 to accept all objectives.
+	var/objective_period = 20 MINUTES
+	/// The maximum number of objectives that can be taken in this period.
+	var/maximum_objectives_in_period = 2
+
+	duplicate_type = /datum/traitor_objective/propaganda_implant
+
+/datum/traitor_objective/propaganda_implant/proc/applicable_job(var/datum/job/job)
+	return TRUE
+
+/datum/traitor_objective/propaganda_implant/common
+	progression_minimum = 0 MINUTES
+	progression_maximum = 40 MINUTES
+	progression_reward = list(3 MINUTES, 6 MINUTES)
+	telecrystal_reward = list(0, 2)
+
+/datum/traitor_objective/propaganda_implant/common/applicable_job(datum/job/job)
+	return !(job.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND)
+
+/datum/traitor_objective/propaganda_implant/authority
+	progression_minimum = 20 MINUTES
+	progression_maximum = 80 MINUTES
 	progression_reward = list(6 MINUTES, 12 MINUTES)
-	telecrystal_reward = 2
+	telecrystal_reward = list(2, 4)
 
-/datum/traitor_objective/target_player/propaganda_implant/nt_rep
+/datum/traitor_objective/propaganda_implant/authority/applicable_job(datum/job/job)
+	return (job.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND|DEPARTMENT_BITFLAG_SECURITY) && !istype(job, /datum/job/nanotrasen_representative)
+
+/datum/traitor_objective/propaganda_implant/nt_rep
+	progression_minimum = 20 MINUTES
+	progression_maximum = INFINITY
 	progression_reward = list(8 MINUTES, 16 MINUTES)
-	telecrystal_reward = 3
+	telecrystal_reward = 4
 
-/datum/traitor_objective/target_player/propaganda_implant/supported_configuration_changes()
-	. = ..()
-	. += NAMEOF(src, objective_period)
-	. += NAMEOF(src, maximum_objectives_in_period)
+/datum/traitor_objective/propaganda_implant/nt_rep/applicable_job(datum/job/job)
+	return istype(job, /datum/job/nanotrasen_representative)
 
-/datum/traitor_objective/target_player/propaganda_implant/New(datum/uplink_handler/handler)
+/datum/traitor_objective/propaganda_implant/New(datum/uplink_handler/handler)
 	. = ..()
 	AddComponent(/datum/component/traitor_objective_limit_per_time, \
-		/datum/traitor_objective/target_player, \
+		/datum/traitor_objective/propaganda_implant, \
 		time_period = objective_period, \
 		maximum_objectives = maximum_objectives_in_period \
 	)
 
-/datum/traitor_objective/target_player/propaganda_implant/generate_objective(datum/mind/generating_for, list/possible_duplicates)
-
+/datum/traitor_objective/propaganda_implant/generate_objective(datum/mind/generating_for, list/possible_duplicates)
 	var/list/already_targeting = list() //List of minds we're already targeting. The possible_duplicates is a list of objectives, so let's not mix things
 	for(var/datum/objective/task as anything in handler.primary_objectives)
 		if(!istype(task.target, /datum/mind))
@@ -56,9 +77,6 @@
 	var/try_target_late_joiners = FALSE
 	if(generating_for.late_joiner)
 		try_target_late_joiners = TRUE
-
-	var/nt_rep = istype(src, /datum/traitor_objective/target_player/propaganda_implant/nt_rep)
-	var/heads_of_staff = istype(src, /datum/traitor_objective/target_player/propaganda_implant/heads)
 
 	for(var/datum/mind/possible_target as anything in get_crewmember_minds())
 		if(possible_target == generating_for)
@@ -79,24 +97,16 @@
 		if(!possible_target.assigned_role)
 			continue
 
-		if(nt_rep)
-			if(!istype(possible_target.assigned_role, /datum/job/nanotrasen_representative))
-				continue
-		else if(heads_of_staff)
-			if(!(possible_target.assigned_role.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND))
-				continue
-		else
-			if(possible_target.assigned_role.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND)
-				continue
+		if(!applicable_job(possible_target.assigned_role))
+			continue
 
-		var/mob/living/carbon/human/targets_current = possible_target.current
-		if(HAS_TRAIT(targets_current, TRAIT_SPONSOR_IMPLANT_SYNDI))
+		if(HAS_TRAIT(possible_target.current, TRAIT_SPONSOR_IMPLANT_SYNDI))
 			continue
 
 		possible_targets += possible_target
 
-	for(var/datum/traitor_objective/target_player/objective as anything in possible_duplicates)
-		possible_targets -= objective.target?.mind
+	for(var/datum/traitor_objective/propaganda_implant/objective as anything in possible_duplicates)
+		possible_targets -= objective.target_mind
 
 	if(try_target_late_joiners)
 		var/list/all_possible_targets = possible_targets.Copy()
@@ -110,8 +120,8 @@
 	if(!possible_targets.len)
 		return FALSE //MISSION FAILED, WE'LL GET EM NEXT TIME
 
-	var/datum/mind/target_mind = pick(possible_targets)
-	target = target_mind.current
+	target_mind = pick(possible_targets)
+	var/mob/living/target = target_mind.current
 
 	replace_in_name("%TARGET%", target_mind.name)
 	replace_in_name("%JOB TITLE%", target_mind.assigned_role.title)
@@ -119,20 +129,20 @@
 	AddComponent(/datum/component/traitor_objective_register, target, fail_signals = list(COMSIG_QDELETING))
 	return TRUE
 
-/datum/traitor_objective/target_player/propaganda_implant/generate_ui_buttons(mob/user)
+/datum/traitor_objective/propaganda_implant/generate_ui_buttons(mob/user)
 	var/list/buttons = list()
 	if(!spawned_implanter)
-		buttons += add_ui_button("", "Pressing this will materialize an eyesnatcher, which can be used on incapacitaded or restrained targets to forcefully remove their eyes.", "syringe", "propaganda_implanter")
+		buttons += add_ui_button("", "Pressing this will materialize a compacted propaganda implanter.", "syringe", "propaganda_implanter")
 	return buttons
 
-/datum/traitor_objective/target_player/propaganda_implant/ui_perform_action(mob/living/user, action)
+/datum/traitor_objective/propaganda_implant/ui_perform_action(mob/living/user, action)
 	. = ..()
 	switch(action)
 		if("propaganda_implanter")
 			if(spawned_implanter)
 				return
 			spawned_implanter = TRUE
-			var/obj/item/implanter/syndi_propaganda_slow/implanter = new(user.drop_location())
+			var/obj/item/implanter/syndi_propaganda/objective/implanter = new(user.drop_location())
 			user.put_in_hands(implanter)
 			implanter.balloon_alert(user, "the implanter materializes in your hand")
 
@@ -152,13 +162,10 @@
 
 // Implanter
 
-/obj/item/implanter/syndi_propaganda_slow
-	name = "implanter (mindshield)"
-	desc = "modified to tap into the syndicate propaganda network, won't work through thick clothing"
+/obj/item/implanter/syndi_propaganda/objective
 	w_class = WEIGHT_CLASS_TINY
-	imp_type = /obj/item/implant/syndi_propaganda
 
-/obj/item/implanter/syndi_propaganda_slow/attack(mob/living/target, mob/user)
+/obj/item/implanter/syndi_propaganda/objective/attack(mob/living/target, mob/user)
 	if(!(istype(target) && user && imp))
 		return
 

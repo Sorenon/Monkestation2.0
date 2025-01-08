@@ -1,11 +1,15 @@
 /datum/component/advert_force_speak
 	dupe_mode = COMPONENT_DUPE_SOURCES
-	var/next_time = 0
+	var/next_time = INFINITY
 	var/mob/living/speaker_implant/speaker_implant
 
 /datum/component/advert_force_speak/Initialize()
 	if(!isliving(parent))
 		return COMPONENT_INCOMPATIBLE
+
+/datum/component/advert_force_speak/on_source_add(source, delay=0)
+	. = ..()
+	next_time = min(next_time, world.time + delay)
 
 /datum/component/advert_force_speak/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_LIVING_LIFE, PROC_REF(on_life))
@@ -22,7 +26,10 @@
 /datum/component/advert_force_speak/proc/on_life(mob/living/source, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
 	if(world.time >= next_time && source.stat < UNCONSCIOUS)
-		next_time = world.time + rand(4 MINUTES) + 1 MINUTE
+		var/delay = rand(2 MINUTES) + 4 MINUTES
+		if (HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT_SYNDI))
+			delay *= 2
+		next_time = world.time + delay
 		INVOKE_ASYNC(src, PROC_REF(speak), source)
 
 /datum/component/advert_force_speak/proc/speak(mob/living/source)
@@ -45,23 +52,14 @@
 	if(implanted && bad_speak)
 		speaker_implant_say(source, message, sponsor)
 	else
-		source.say(message, language=/datum/language/common, forced="sponsored ([sponsor])", spans=spans)
+		source.say(message, language=/datum/language/common, forced="sponsorship ([sponsor])", spans=spans)
 
-	if(!implanted)
-		return
-
-	var/datum/bank_account/bank_account = source.get_bank_account()
-	if(bank_account)
-		bank_account.adjust_money(syndi ? -20 : 5, "[sponsor]: Sponsor Payment")
-
-	if (HAS_TRAIT(source, TRAIT_SPONSOR_IMPLANT))
-		return
-
-	for (var/obj/item/implant/syndi_propaganda/implant in source.implants)
-		implant.uses -= 1
-		if (implant.uses <= 0)
-			qdel(implant)
-		break
+	if(implanted)
+		var/datum/bank_account/bank_account = source.get_bank_account()
+		if(bank_account)
+			var/revenue = syndi ? -40 : 5
+			bank_account.adjust_money(revenue, "[sponsor]: Sponsorship Payment")
+			bank_account.bank_card_talk("Sponsorship Payment: [revenue] credits received from [sponsor].")
 
 /datum/component/advert_force_speak/proc/speaker_implant_say(mob/living/source, message, sponsor, spans)
 	if(speaker_implant == null)
@@ -71,7 +69,7 @@
 		speaker_implant.bubble_icon = "machine"
 
 	speaker_implant.body_maptext_height_offset = source.body_maptext_height_offset
-	speaker_implant.say(message, language=/datum/language/common, forced="sponsored ([sponsor])", spans=spans)
+	speaker_implant.say(message, language=/datum/language/common, forced="sponsorship ([sponsor])", spans=spans)
 
 /mob/living/speaker_implant
 	name = "speaker implant"

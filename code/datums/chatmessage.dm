@@ -202,10 +202,10 @@
 	// We dim italicized text to make it more distinguishable from regular text
 	var/tgt_color = extra_classes.Find("italics") ? target.chat_color_darkened : target.chat_color
 
-	// monkestation edit start
+	// MONKESTATION EDIT START
 	if ("syndi-propaganda" in extra_classes)
 		tgt_color = "#eb0a0a"
-	// monkestation edit stop
+	// MONKESTATION EDIT END
 
 	// Approximate text height
 	var/complete_text = "<span style='color: [tgt_color]'><span class='center [extra_classes.Join(" ")]'>[owner.say_emphasis(text)]</span></span>"

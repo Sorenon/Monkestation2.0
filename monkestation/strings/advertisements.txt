@@ -1,35 +1,35 @@
 --------------------------------------------------------------------------------------------------------------
 	name: Nanotrasen
-	desc: The one megacoorporation to rule them all
+	desc: The one megacorporation to rule them all
 N is for Nanotrasen, your very best friend!
 Parents don't let your children fall behind. Enrol them in a Nanotrasen education program today!
 Asshat subordinates getting you down? Invest in a Galaxywide starship to remind them who's boss.
 Tired of poor public transit? Treat yourself to an ATA spacecraft to get to where you want, when you want.
 Nanotrasen, for a better future!
 Get your boss something special this Nanotrasen approved holiday season.
-You can always relly on Trasen-Knox Scientific for academic greatness!
+You can always rely on Trasen-Knox for scientific expertise!
 Struggling with depression? A Nanotrasen licensed psychologist can get you the medication you need.
-Have an issue with the company? Be sure to vent your woes to your local NT rep to get what you deserve!
+Have an issue with the company? Be sure to complain to your local NT rep for the treatment you deserve!
 Don't be a good consumer when you can be a +great+ consumer!
 Flaunt your inner Nyanotrasen with an anime implant!
 Bring strength and stability to the new frontier by enlisting in the Nanotrasen Deep-Space Security Force!
 Stay connected with society using the NT Galactic Network, providing the highest bandwidth in this sector!
-Join us at Nanotrasen for a life amoung the stars. Fortune and glory awaits.
+Join us at Nanotrasen for a life among the stars. Fortune and glory awaits.
 --------------------------------------------------------------------------------------------------------------
-	name: Dont Cooporation
+	name: Donk Co.
 	desc: Junkfood, cargo and suspiciously accurate replicas
 Buy Donk-Pockets today!
 The Donk cannot be stopped!
 Get Good. Get Donk.
 Oh boy I '%name%' can't get enough of these Donk-Pockets!
 Buy Donk-Pockets. Proven to taste like food in over 99% of cases!
-Did you know you can eat Donksoft darts? You shouldn't but you can!
+Double the fun with Donksoft darts by enjoying them as a bitesized snack!
 The real world sucks! Immerse yourself in the Donksoft arcades instead!
-Get yourself a Donksoft firearm! It almost never explodes!
+Get yourself a Donksoft firearm! They almost never explode!
 Try the new Donk-Pocket flavours! 100% satisfaction or none of your money back!
 BLAST OFF with the rapid speeds of Donk Co. cargo shuttles!
 Turbocharge your mind and body with all the 0% natural flavours Donk Co. has to offer!
-Take your armoury to the next level with the new line of DonkSoft replica firearms!
+Take your armoury to the next level with the new line of Donksoft replica firearms!
 --------------------------------------------------------------------------------------------------------------
 	name: SpaceCigs Corp
 Space cigs taste good like a cigarette should.
@@ -52,13 +52,13 @@ FIGHTERS! Test your mettle in the SpaceBooze thunderdome! Open to all ages.
 	name: DeForest Medical Corporation
 You never know when disaster could strike. Get DeForest Medical Insurance today!
 Get DeForest Medical Insurance for a safer you!
-Purchace a 1 year license to DeForest implants for as little as $100,000
-Caution. Black market cybernetics has been linked to a rise in severe and irreversable psycosis and/or injury.
+Purchase a 1 year license to DeForest implants for as little as $100,000
+Caution. Unlicensed cybernetics have been linked to a rise in severe and irreversible psychosis and/or injury.
 --------------------------------------------------------------------------------------------------------------
 	name: SSC
-Find yourself on a vacation to one of the Spinward Sector's many deep space holliday resorts!
+Find yourself on a vacation to one of the Spinward Sector's many deep space holiday resorts!
 --------------------------------------------------------------------------------------------------------------
-	name: Tiders Union
+	name: Tider's Union
 Only those that wear the gray can truly be free.
 Corridors are for the sleeping. The awake travel by the tunnels.
 Heed the call of maintenance. One day we shall all roam free in her glory.
@@ -72,9 +72,9 @@ Kiboko Grenade Launchers. The perfect gift for the person who has everything.
 Floran sells weapons! You buy weapons! Everybody happy! Good!
 Floran sells meats! They are good meats! Yum!
 --------------------------------------------------------------------------------------------------------------
-	name: Interdyne Pharmecuticles
-You might be able to dodge taxes, but you can't dodge an asteroid. Get clone scanned before it's too late.
-Tackle ape infestations with ease with a Rapid Tranquiliser Gun. Interdyne Pharmecuticles
+	name: Interdyne Pharmaceutics
+You might be able to dodge taxes, but you can't dodge an supernova. Buy a clone license before it's too late.
+Tackle ape infestations with ease with a Rapid Tranquiliser Gun from Interdyne Pharmaceutics.
 --------------------------------------------------------------------------------------------------------------
 	name: Elaine Anders
 How do I use NT Search? Please tell me how my nephew Carl Anders is doing. How do I delete text? What is NT Advertisement Service?
@@ -91,8 +91,7 @@ The only difference between the clown and the captain is a sense of humour.
 Why didn't the HoP see the nukies? Because they were in the HoP line.
 What's green, sticky and hard to get out of the walls? The CentCom intern who wanted to inspect R&D.
 How did the chemist know the mime was a traitor? Because they made sali+psycic+ acid.
-Why did Iam fall into the supermatter? Because I pushed him in.
 I've really enjoyed my time in security. Good pay, though picking broken teeth out of your fists does get old.
-Remeber to take a handfull of floor pills at the start of your shift to get your organs a good spit shining.
+Remember to take a handful of floor pills at the start of your shift to get your organs a good spit shining.
 The only thing with a shorter halflife than Ian is a tider in cargo.
-I don't understand the dislike of monkies. I think they're great, though the gristle gets stuck in my teeth.
+I don't understand the dislike of monkeys. I think they're great, though the gristle gets stuck in my teeth.

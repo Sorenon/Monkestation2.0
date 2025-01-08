@@ -2,7 +2,7 @@
 	. = ..()
 	if (!.)
 		return .
-	if("syndi-propaganda" in spans && has_language(message_language))
+	if(("syndi-propaganda" in spans) && has_language(message_language))
 		var/mob/living/speaker_implant/speaker_implant = speaker
 		var/mob/living/afs_speaker = istype(speaker_implant) ? speaker_implant.owner : speaker
 		var/is_speaker = src == afs_speaker
