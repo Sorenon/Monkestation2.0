@@ -433,7 +433,7 @@
 		"genescanner",
 		"healthanalyzer",
 		"scanning_pad",
-		"vitals_monitor",
+		"vitals_display",
 		"antibodyscanner",
 		"med_spray_bottle",
 		"medical_kiosk",
@@ -460,7 +460,7 @@
 	prereq_ids = list("biotech")
 	design_ids = list(
 		"crewpinpointer",
-		"vitals_monitor_advanced",
+		"vitals_display_advanced",
 		"defibrillator_compact",
 		"harvester",
 		"healthanalyzer_advanced",
