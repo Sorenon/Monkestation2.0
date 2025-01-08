@@ -114,10 +114,10 @@
 			if(!possible_target.late_joiner)
 				possible_targets -= possible_target
 
-		if(!possible_targets.len)
+		if(!length(possible_targets))
 			possible_targets = all_possible_targets
 
-	if(!possible_targets.len)
+	if(!length(possible_targets))
 		return FALSE //MISSION FAILED, WE'LL GET EM NEXT TIME
 
 	target_mind = pick(possible_targets)

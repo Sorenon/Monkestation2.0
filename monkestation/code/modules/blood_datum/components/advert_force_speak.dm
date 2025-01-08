@@ -18,10 +18,8 @@
 	UnregisterSignal(parent, list(COMSIG_LIVING_LIFE))
 
 /datum/component/advert_force_speak/Destroy(force)
-	. = ..()
-	if(speaker_implant != null)
-		qdel(speaker_implant)
-		speaker_implant = null
+	QDEL_NULL(speaker_implant)
+	return ..()
 
 /datum/component/advert_force_speak/proc/on_life(mob/living/source, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
@@ -42,7 +40,7 @@
 	// 	bad_speak = FALSE
 
 	var/list/ad_list = syndi ? GLOB.advertisements.syndi_ads : GLOB.advertisements.nt_ads
-	var/ad_idx = rand(1, ad_list.len / 2) * 2
+	var/ad_idx = rand(1, length(ad_list) / 2) * 2
 	var/sponsor = ad_list[ad_idx - 1]
 	var/message = ad_list[ad_idx]
 	var/spans = syndi ? list("red", "syndi-propaganda") : list()
@@ -62,9 +60,8 @@
 			bank_account.bank_card_talk("Sponsorship Payment: [revenue] credits received from [sponsor].")
 
 /datum/component/advert_force_speak/proc/speaker_implant_say(mob/living/source, message, sponsor, spans)
-	if(speaker_implant == null)
-		speaker_implant = new()
-		speaker_implant.loc = source
+	if(QDELETED(speaker_implant))
+		speaker_implant = new(source)
 		speaker_implant.owner = source
 		speaker_implant.bubble_icon = "machine"
 
