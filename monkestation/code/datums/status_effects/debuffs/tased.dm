@@ -20,10 +20,6 @@
 		qdel(src)
 		return
 
-	var/existing_effect = new_owner.has_status_effect(type)
-	if(existing_effect && existing_effect != src)
-		alert_type = null
-
 	. = ..()
 	if(!.)
 		return

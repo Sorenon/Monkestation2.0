@@ -1,4 +1,4 @@
-// guh?
+// I don't think emagging operating computers actually does anything yet
 // /obj/machinery/computer/operating/emag_act(mob/user, obj/item/card/emag/emag_card)
 // 	. = ..()
 // 	if(obj_flags & EMAGGED)
