@@ -121,8 +121,8 @@
 /mob/living/proc/activate_diseases(seconds_per_tick, times_fired)
 	if (length(diseases))
 		var/active_disease = pick(diseases)//only one disease will activate its effects at a time.
-		for (var/datum/disease/disease  as anything in diseases)
-			var/datum/disease/advanced/adv_disease
+		for (var/datum/disease/disease as anything in diseases)
+			var/datum/disease/advanced/adv_disease = disease
 			if(istype(adv_disease))
 				adv_disease.activate(src, active_disease != adv_disease, seconds_per_tick)
 

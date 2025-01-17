@@ -62,6 +62,18 @@ Key procs
 		if(M.current)
 			update_atom_languages(M.current)
 
+	var/mob/living/living_owner = owner
+	if(istype(living_owner))
+		if(living_owner.has_quirk(/datum/quirk/foreigner2))
+			for(var/language in understood_languages)
+				if(language != /datum/language/common)
+					remove_language(language, TRUE, FALSE, LANGUAGE_ATOM)
+			for(var/language in spoken_languages)
+				if(language != /datum/language/common)
+					remove_language(language, FALSE, TRUE, LANGUAGE_ATOM)
+		if(living_owner.has_quirk(/datum/quirk/foreigner3))
+			remove_language(/datum/language/common, FALSE, TRUE, LANGUAGE_ATOM)
+
 	// If we have an owner, we'll set a default selected language
 	if(owner)
 		get_selected_language()
