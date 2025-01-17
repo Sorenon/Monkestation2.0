@@ -15,3 +15,10 @@ GLOBAL_LIST_INIT(limb_choice, list(
 	"Left Leg" = /obj/item/bodypart/leg/left/robot/surplus,
 	"Right Leg" = /obj/item/bodypart/leg/right/robot/surplus,
 ))
+
+///Options for the prothetic limb quirk to choose from
+GLOBAL_LIST_INIT(prothetic_severity, list(
+	"Missing",
+	"Paralysed",
+	"Cheap Prothetic",
+))
