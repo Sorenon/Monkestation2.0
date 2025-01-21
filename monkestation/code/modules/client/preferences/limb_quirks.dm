@@ -1,0 +1,48 @@
+/datum/preference/choiced/limb
+	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
+	savefile_identifier = PREFERENCE_CHARACTER
+	var/quirk_name
+
+/datum/preference/choiced/limb/create_default_value()
+	return "Random"
+
+/datum/preference/choiced/limb/init_possible_values()
+	return list("Random") + GLOB.limb_choice
+
+/datum/preference/choiced/limb/is_accessible(datum/preferences/preferences)
+	. = ..()
+	if (!.)
+		return FALSE
+
+	return quirk_name in preferences.all_quirks
+
+/datum/preference/choiced/limb/apply_to_human(mob/living/carbon/human/target, value)
+	return
+
+// #####################
+
+/datum/preference/toggle/limb_missing
+	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
+	savefile_identifier = PREFERENCE_CHARACTER
+	default_value = FALSE
+	var/quirk_name
+
+/datum/preference/toggle/limb_missing/is_accessible(datum/preferences/preferences)
+	. = ..()
+	if (!.)
+		return FALSE
+
+	return quirk_name in preferences.all_quirks
+
+/datum/preference/toggle/limb_missing/apply_to_human(mob/living/carbon/human/target, value)
+	return
+
+// ####################
+
+/datum/preference/choiced/limb/paralysed
+	savefile_key = "paralysed_limb"
+	quirk_name = "Paralysed Limb"
+
+/datum/preference/toggle/limb_missing/paralysed
+	savefile_key = "paralysed_limb_missing"
+	quirk_name = "Paralysed Limb"
