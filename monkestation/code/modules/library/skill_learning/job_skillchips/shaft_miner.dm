@@ -174,8 +174,15 @@
 	if(!length(callouts))
 		return
 
-	if(COOLDOWN_FINISHED(src, radio_cooldown))
-		pointing_mob.say(".h [pick(callouts)]", forced = "Miner Skillchip")
+	var/turf/our_turf = get_turf(pointing_mob)
+	var/pressure = our_turf.return_air()?.return_pressure() || 0
+	var/thin_air = pressure < (ONE_ATMOSPHERE * 0.4)
+
+	if(thin_air && COOLDOWN_FINISHED(src, radio_cooldown))
+		if (is_mining_level(our_turf.z))
+			pointing_mob.say(".h [pick(callouts)]", forced = "Miner Skillchip")
+		else
+			pointing_mob.say("; [pick(callouts)]", forced = "Miner Skillchip")
 		COOLDOWN_START(src, radio_cooldown, rand(5 SECONDS, 10 SECONDS))
 	else
 		pointing_mob.say("[pick(callouts)]", forced = "Miner Skillchip")
