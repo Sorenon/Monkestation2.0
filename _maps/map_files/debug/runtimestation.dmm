@@ -2597,7 +2597,7 @@
 /area/station/construction)
 "Rz" = (
 /obj/structure/table,
-/obj/item/clothing/suit/space/hardsuit/security,
+/obj/item/clothing/suit/space/hardsuit/sec,
 /obj/item/tank/jetpack/suit,
 /turf/open/floor/iron,
 /area/station/medical/medbay)
