@@ -571,7 +571,6 @@
 				return // Disconnected while checking the appearance ban.
 			organic_name = player_client.prefs.read_preference(/datum/preference/name/real_name)
 
-		var/is_posibrain = player_client.prefs.read_preference(/datum/preference/choiced/silicon_brain) == "Positronic"
 		if (player_client.prefs.read_preference(/datum/preference/choiced/silicon_brain) == "Positronic")
 			if (mmi != null)
 				qdel(mmi)

@@ -2,7 +2,6 @@
 	savefile_key = "silicon_brain"
 	savefile_identifier = PREFERENCE_CHARACTER
 	category = PREFERENCE_CATEGORY_NON_CONTEXTUAL
-	priority = PREFERENCE_PRIORITY_BODY_TYPE //done after species
 
 /datum/preference/choiced/silicon_brain/init_possible_values()
 	return list("MMI", "Positronic")
@@ -16,13 +15,6 @@
 /mob/living/silicon/ai/apply_prefs_job(client/player_client, datum/job/job)
 	posibrain_inside = player_client.prefs.read_preference(/datum/preference/choiced/silicon_brain) == "Positronic"
 	. = ..()
-
-// /mob/living/silicon/robot/apply_prefs_job(client/player_client, datum/job/job)
-// 	if (player_client.prefs.read_preference(/datum/preference/choiced/silicon_brain) == "Positronic")
-// 		if (mmi != null)
-// 			qdel(mmi)
-// 		mmi = make_mmi(posibrain=TRUE)
-// 	. = ..()
 
 /mob/living/silicon/proc/make_mmi(posibrain=FALSE)
 	var/obj/item/mmi/mmi
