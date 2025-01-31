@@ -19,7 +19,13 @@
 /datum/preference/choiced/limb/apply_to_human(mob/living/carbon/human/target, value)
 	return
 
-// #####################
+// Paralysed limb choice
+
+/datum/preference/choiced/limb/paralysed
+	savefile_key = "paralysed_limb"
+	quirk_name = "Paralysed Limb"
+
+// Missing limbs toggle
 
 /datum/preference/toggle/limb_missing
 	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
@@ -37,17 +43,9 @@
 /datum/preference/toggle/limb_missing/apply_to_human(mob/living/carbon/human/target, value)
 	return
 
-// ####################
-
-/datum/preference/choiced/limb/paralysed
-	savefile_key = "paralysed_limb"
-	quirk_name = "Paralysed Limb"
-
 /datum/preference/toggle/limb_missing/paralysed
 	savefile_key = "paralysed_limb_missing"
 	quirk_name = "Paralysed Limb"
-
-// ####################
 
 /datum/preference/toggle/limb_missing/hemiplegic
 	savefile_key = "hemiplegic_limbs_missing"
@@ -57,7 +55,7 @@
 	savefile_key = "paraplegic_limbs_missing"
 	quirk_name = "Paraplegic"
 
-// ###############
+// Hemiplegic side
 
 /datum/preference/choiced/hemiplegic_side
 	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES

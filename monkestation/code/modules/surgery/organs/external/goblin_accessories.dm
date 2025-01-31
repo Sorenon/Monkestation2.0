@@ -24,11 +24,9 @@
 /datum/bodypart_overlay/mutant/goblin_ears/can_draw_on_bodypart(mob/living/carbon/human/human)
 	return TRUE
 
-// ########
-
 /obj/item/organ/external/goblin_nose
 	name = "goblin nose"
-	desc = "They don't actually let you hear better."
+	desc = "They don't actually let you smell better."
 	icon_state = "goblin_nose"
 	icon = 'monkestation/icons/obj/medical/organs/organs.dmi'
 

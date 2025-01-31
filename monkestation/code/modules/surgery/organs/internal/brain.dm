@@ -461,12 +461,6 @@
 		if(damage > BRAIN_DAMAGE_MILD)
 			to_chat(owner, span_warning("Alert: Minor corruption in central processing unit. Error Code: 001-HP"))
 
-/obj/item/organ/internal/brain/synth/proc/turn_into_mmi()
-	name = "compact man-machine interface"
-	desc = "A compact man-machine interface, perfectly dimensioned to fit in the same slot as a synthetic-compatible positronic brain. Unfortunately, the brain seems to be permanently attached to the circuitry, and it seems relatively sensitive to it's environment. It is usually slotted into the chest of synthetic crewmembers."
-	icon = 'monkestation/code/modules/smithing/icons/ipc_organ.dmi'
-	icon_state = "mmi-ipc"
-
 /*
 /obj/item/organ/internal/brain/synth/circuit
 	name = "compact AI circuit"

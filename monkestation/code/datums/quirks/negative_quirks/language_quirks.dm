@@ -23,7 +23,7 @@
 	value = -4
 	gain_text = span_notice("The words being spoken around you don't make any sense.")
 	lose_text = span_notice("You've developed fluency in Galactic Common.")
-	medical_record_text = "Patient does not speak Galactic Common and may require an interpreter."
+	medical_record_text = "Patient does not understand Galactic Common and may require an interpreter."
 	mail_goodies = list(/obj/item/taperecorder) // for translation
 
 /datum/quirk/language_holder/outsider
