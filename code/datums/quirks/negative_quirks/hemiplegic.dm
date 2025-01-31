@@ -14,6 +14,7 @@
 	)
 
 /datum/quirk/hemiplegic/add(client/client_source)
+	// MONKESTATION EDIT START
 	var/side = client_source?.prefs?.read_preference(/datum/preference/choiced/hemiplegic_side)
 	var/trauma_type
 	if(side == "Left")
@@ -24,6 +25,7 @@
 		trauma_type = pick(/datum/brain_trauma/severe/paralysis/hemiplegic/left, /datum/brain_trauma/severe/paralysis/hemiplegic/right)
 
 	var/mob/living/carbon/human/human_holder = quirk_holder
+	// 	var/trauma_type = pick(/datum/brain_trauma/severe/paralysis/hemiplegic/left, /datum/brain_trauma/severe/paralysis/hemiplegic/right) - original
 	human_holder.gain_trauma(trauma_type, TRAUMA_RESILIENCE_ABSOLUTE)
 
 	if(client_source?.prefs?.read_preference(/datum/preference/toggle/limb_missing/hemiplegic))
@@ -34,6 +36,7 @@
 			if(/datum/brain_trauma/severe/paralysis/hemiplegic/right)
 				human_holder.remove_bodypart_painlessly(BODY_ZONE_R_ARM)
 				human_holder.remove_bodypart_painlessly(BODY_ZONE_R_LEG)
+	// MONKESTATION EDIT END
 
 /datum/quirk/hemiplegic/remove()
 	var/mob/living/carbon/human/human_holder = quirk_holder

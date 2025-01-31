@@ -6008,6 +6008,7 @@
 #include "monkestation\code\datums\quirks\negative_quirks\frail.dm"
 #include "monkestation\code\datums\quirks\negative_quirks\hard_of_hearing.dm"
 #include "monkestation\code\datums\quirks\negative_quirks\kleptomaniac.dm"
+#include "monkestation\code\datums\quirks\negative_quirks\language.dm"
 #include "monkestation\code\datums\quirks\negative_quirks\light_drinker.dm"
 #include "monkestation\code\datums\quirks\negative_quirks\monophobia.dm"
 #include "monkestation\code\datums\quirks\negative_quirks\paralysed_limb.dm"
