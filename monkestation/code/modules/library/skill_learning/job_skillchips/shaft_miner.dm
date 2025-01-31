@@ -205,9 +205,9 @@
 /obj/item/skillchip/drg_callout/ui_action_click()
 	disabled = !disabled
 	if (disabled)
-		balloon_alert(holding_brain.owner, "skillchip disabled")
+		to_chat(holding_brain.owner, "D.R.G.R.A.S skillchip disabled.")
 	else
-		balloon_alert(holding_brain.owner, "skillchip enabled")
+		to_chat(holding_brain.owner, "D.R.G.R.A.S skillchip enabled.")
 
 /obj/item/skillchip/drg_callout/item_action_slot_check(slot, mob/user)
 	return user == holding_brain.owner

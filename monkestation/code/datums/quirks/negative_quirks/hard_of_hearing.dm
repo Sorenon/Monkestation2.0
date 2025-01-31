@@ -1,4 +1,4 @@
-/datum/quirk/item/hard_of_hearing
+/datum/quirk/hard_of_hearing
 	name = "Hard Of Hearing"
 	desc = "You are incurably deaf."
 	icon = FA_ICON_DEAF

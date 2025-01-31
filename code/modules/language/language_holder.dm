@@ -71,6 +71,7 @@ Key procs
 		var/outsider_human = outsider && is_human
 		if(uncommon || outsider_human)
 			remove_language(/datum/language/common, TRUE, TRUE, LANGUAGE_ATOM)
+			add_blocked_language(/datum/language/common, LANGUAGE_QUIRK)
 		if(outsider)
 			for(var/language in understood_languages)
 				if(language != /datum/language/common)
