@@ -4,6 +4,7 @@
 	name = "Pet Delivery Beacon"
 	desc = "For those shifts when you need a little piece of home and some company."
 	company_message = span_bold("Pet request received. Your friend is on the way.")
+	w_class = WEIGHT_CLASS_SMALL
 	var/default_name = "Stinko"
 
 	var/static/list/pet_commands = list(
@@ -13,6 +14,7 @@
 		/datum/pet_command/point_targeting/fetch,
 		/datum/pet_command/play_dead,
 	)
+
 
 /obj/item/choice_beacon/pet/generate_display_names()
 	var/static/list/pet_list

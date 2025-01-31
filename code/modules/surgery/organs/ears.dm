@@ -61,10 +61,17 @@
 			adjustEarDamage(0, 4)
 			SEND_SOUND(owner, sound('sound/weapons/flash_ring.ogg'))
 
-	if(deaf)
-		ADD_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
-	else
+	if (!deaf)
 		REMOVE_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
+		REMOVE_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
+		return
+
+	if (damage < low_threshold)
+		ADD_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
+		REMOVE_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
+	else
+		ADD_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
+		REMOVE_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
 
 /obj/item/organ/internal/ears/proc/adjustEarDamage(ddmg, ddeaf)
 	if(owner.status_flags & GODMODE)
