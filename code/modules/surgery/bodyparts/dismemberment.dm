@@ -71,7 +71,7 @@
 
 
 ///limb removal. The "special" argument is used for swapping a limb with a new one without the effects of losing a limb kicking in.
-/// TODO, fix or document bug where it is always the case that dismembered == FALSE
+///TODO, fix or properly document the issue that that dismembered is always FALSE
 /obj/item/bodypart/proc/drop_limb(special, dismembered, violent = FALSE, painless = FALSE)
 	if(!owner)
 		return

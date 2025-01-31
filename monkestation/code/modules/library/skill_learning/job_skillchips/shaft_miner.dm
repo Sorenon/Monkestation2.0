@@ -9,6 +9,8 @@
 	cooldown = 5 SECONDS //Honestly, this should be easy to turn off at any time if you don't want it anymore.
 	activate_message = span_notice("You suddenly understand the need to shout about things you point at.")
 	deactivate_message = span_notice("You no longer understand why you were yelling so much.")
+	var/datum/action/toggle_action
+	var/disabled = FALSE
 	//5-10 second delay for radio messages
 	COOLDOWN_DECLARE(radio_cooldown)
 	//1 second delay for regular point shouts
@@ -160,9 +162,15 @@
 /obj/item/skillchip/drg_callout/on_activate(mob/living/carbon/user, silent)
 	. = ..()
 	RegisterSignal(user, COMSIG_MOB_POINTED, PROC_REF(point_handler))
+	if (isnull(toggle_action))
+		toggle_action = new /datum/action/item_action/hands_free/drg_callout(src)
+	toggle_action.Grant(user)
 
 /obj/item/skillchip/drg_callout/proc/point_handler(mob/pointing_mob, atom/pointed_at)
 	SIGNAL_HANDLER
+
+	if(disabled)
+		return
 
 	if(!COOLDOWN_FINISHED(src, shout_cooldown))
 		return
@@ -189,8 +197,22 @@
 
 	COOLDOWN_START(src, shout_cooldown, 1 SECONDS)
 
-
-
 /obj/item/skillchip/drg_callout/on_deactivate(mob/living/carbon/user, silent)
 	. = ..()
 	UnregisterSignal(holding_brain.owner, COMSIG_MOB_POINTED)
+	toggle_action.Remove(user)
+
+/obj/item/skillchip/drg_callout/ui_action_click()
+	disabled = !disabled
+	if (disabled)
+		balloon_alert(holding_brain.owner, "skillchip disabled")
+	else
+		balloon_alert(holding_brain.owner, "skillchip enabled")
+
+/obj/item/skillchip/drg_callout/item_action_slot_check(slot, mob/user)
+	return user == holding_brain.owner
+
+/datum/action/item_action/hands_free/drg_callout
+	name = "Toggle D.R.G.R.A.S Skillchip"
+	button_icon = 'icons/obj/mining.dmi'
+	button_icon_state = "pickaxe"

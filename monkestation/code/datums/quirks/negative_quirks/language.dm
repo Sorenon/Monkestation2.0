@@ -6,7 +6,7 @@
 	var/mob/living/carbon/human/human_holder = quirk_holder
 	human_holder.language_holder = new human_holder.language_holder.type(human_holder)
 	human_holder.update_atom_languages()
-	var/datum/quirk/bilingual/bilingual = human_holder.get_quirk(/datum/qurik/bilingual)
+	var/datum/quirk/bilingual/bilingual = human_holder.get_quirk(/datum/quirk/bilingual)
 	if (bilingual)
 		bilingual.add_unique(client_source)
 

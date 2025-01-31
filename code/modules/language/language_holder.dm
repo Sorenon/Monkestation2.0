@@ -65,7 +65,7 @@ Key procs
 	// MONKESTATION EDIT START
 	var/mob/living/carbon/carbon_owner = owner
 	if(istype(carbon_owner))
-		var/uncommon = carbon_owner.has_quirk(/datum/qurik/language_holder/uncommon)
+		var/uncommon = carbon_owner.has_quirk(/datum/quirk/language_holder/uncommon)
 		var/outsider = carbon_owner.has_quirk(/datum/quirk/language_holder/outsider)
 		var/is_human = istype(carbon_owner.dna.species, /datum/species/human)
 		var/outsider_human = outsider && is_human
