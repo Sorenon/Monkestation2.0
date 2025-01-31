@@ -62,6 +62,7 @@ Key procs
 		if(M.current)
 			update_atom_languages(M.current)
 
+	// MONKESTATION EDIT START
 	var/mob/living/carbon/carbon_owner = owner
 	if(istype(carbon_owner))
 		var/uncommon = carbon_owner.has_quirk(/datum/qurik/language_holder/uncommon)
@@ -77,13 +78,11 @@ Key procs
 			for(var/language in spoken_languages)
 				if(language != /datum/language/common)
 					remove_language(language, FALSE, TRUE, LANGUAGE_ATOM)
-		if(uncommon && !outsider)
+		if(uncommon)
 			grant_language(/datum/language/uncommon, TRUE, TRUE, LANGUAGE_QUIRK)
 		if(carbon_owner.has_quirk(/datum/quirk/language_holder/listener))
-			if(uncommon)
-				remove_language(/datum/language/uncommon, FALSE, TRUE, LANGUAGE_ATOM)
-			else
-				remove_language(/datum/language/common, FALSE, TRUE, LANGUAGE_ATOM)
+			remove_language(/datum/language/common, FALSE, TRUE, LANGUAGE_ATOM)
+	// MONKESTATION EDIT END
 
 	// If we have an owner, we'll set a default selected language
 	if(owner)

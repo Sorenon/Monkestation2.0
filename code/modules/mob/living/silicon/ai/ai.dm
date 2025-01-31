@@ -425,28 +425,32 @@
 	return TRUE
 
 /mob/living/silicon/ai/proc/make_mmi_drop_and_transfer(obj/item/mmi/the_mmi, the_core)
-	// var/mmi_type
-	// if(posibrain_inside)
-	// 	mmi_type = new/obj/item/mmi/posibrain(src, /* autoping = */ FALSE)
-	// else
-	// 	mmi_type = new/obj/item/mmi(src)
-	// if(hack_software)
-	// 	new/obj/item/malf_upgrade(get_turf(src))
-	// the_mmi = mmi_type
-	// the_mmi.brain = new /obj/item/organ/internal/brain(the_mmi)
-	// the_mmi.brain.organ_flags |= ORGAN_FROZEN
-	// the_mmi.brain.name = "[real_name]'s brain"
-	// the_mmi.name = "[initial(the_mmi.name)]: [real_name]"
-	// the_mmi.set_brainmob(new /mob/living/brain(the_mmi))
-	// the_mmi.brainmob.name = src.real_name
-	// the_mmi.brainmob.real_name = src.real_name
-	// the_mmi.brainmob.container = the_mmi
+	// monkestation edit start
+	/* original
+	var/mmi_type
+	if(posibrain_inside)
+		mmi_type = new/obj/item/mmi/posibrain(src, /* autoping = */ FALSE)
+	else
+		mmi_type = new/obj/item/mmi(src)
+	if(hack_software)
+		new/obj/item/malf_upgrade(get_turf(src))
+	the_mmi = mmi_type
+	the_mmi.brain = new /obj/item/organ/internal/brain(the_mmi)
+	the_mmi.brain.organ_flags |= ORGAN_FROZEN
+	the_mmi.brain.name = "[real_name]'s brain"
+	the_mmi.name = "[initial(the_mmi.name)]: [real_name]"
+	the_mmi.set_brainmob(new /mob/living/brain(the_mmi))
+	the_mmi.brainmob.name = src.real_name
+	the_mmi.brainmob.real_name = src.real_name
+	the_mmi.brainmob.container = the_mmi
+	*/
 	if (!the_mmi)
 		the_mmi = make_mmi(posibrain_inside)
+	// monkestation edit end
 
 	var/has_suicided_trait = HAS_TRAIT(src, TRAIT_SUICIDED)
 	the_mmi.brainmob.set_suicide(has_suicided_trait)
-	if(the_mmi.brain)
+	if(the_mmi.brain) // monkestation addition
 		the_mmi.brain.suicided = has_suicided_trait
 	if(the_core)
 		var/obj/structure/ai_core/core = the_core

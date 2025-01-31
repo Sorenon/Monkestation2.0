@@ -571,11 +571,13 @@
 				return // Disconnected while checking the appearance ban.
 			organic_name = player_client.prefs.read_preference(/datum/preference/name/real_name)
 
+		// MONKESTATION EDIT START
 		if (player_client.prefs.read_preference(/datum/preference/choiced/silicon_brain) == "Positronic")
 			if (mmi != null)
 				qdel(mmi)
 			mmi = make_mmi(posibrain=TRUE)
 		else
+		// MONKESTATION EDIT END
 			mmi.name = "[initial(mmi.name)]: [organic_name]"
 			if(mmi.brain)
 				mmi.brain.name = "[organic_name]'s brain"

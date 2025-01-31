@@ -2,16 +2,19 @@
 /datum/quirk/language_holder
 	abstract_parent_type = /datum/quirk/language_holder
 
-/datum/quirk/language_holder/proc/recreate_language_holder()
+/datum/quirk/language_holder/proc/recreate_language_holder(client_source)
 	var/mob/living/carbon/human/human_holder = quirk_holder
 	human_holder.language_holder = new human_holder.language_holder.type(human_holder)
 	human_holder.update_atom_languages()
+	var/datum/quirk/bilingual/bilingual = human_holder.get_quirk(/datum/qurik/bilingual)
+	if (bilingual)
+		bilingual.add_unique(client_source)
 
 /datum/quirk/language_holder/add(client/client_source)
-	recreate_language_holder()
+	recreate_language_holder(client_source)
 
 /datum/quirk/language_holder/remove(client/client_source)
-	recreate_language_holder()
+	recreate_language_holder(client_source)
 
 /datum/quirk/language_holder/uncommon
 	name = "Uncommon"
@@ -25,16 +28,16 @@
 
 /datum/quirk/language_holder/outsider
 	name = "Species Outsider"
-	desc = "You don't weren't taught any of your species' languages."
+	desc = "You don't know your species' language."
 	icon = FA_ICON_LANGUAGE
-	value = -1
-	gain_text = span_notice("You can't understand your species' languages.")
-	lose_text = span_notice("You've remembered your species' languages.")
+	value = -2
+	gain_text = span_notice("You can't understand your species' language.")
+	lose_text = span_notice("You've remembered your species' language.")
 	mail_goodies = list(/obj/item/taperecorder) // for translation
 
 /datum/quirk/language_holder/listener
 	name = "Listener"
-	desc = "You are unable to speak Galactic Common (or Galactic Uncommon) though you understand it just fine."
+	desc = "You are unable to speak Galactic Common though you understand it just fine."
 	icon = FA_ICON_LANGUAGE
 	value = -2
 	gain_text = span_notice("You don't know how to speak Galactic Common.")

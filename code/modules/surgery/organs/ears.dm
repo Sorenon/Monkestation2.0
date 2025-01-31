@@ -61,6 +61,13 @@
 			adjustEarDamage(0, 4)
 			SEND_SOUND(owner, sound('sound/weapons/flash_ring.ogg'))
 
+	// monkestation edit start
+	/* original
+	if(deaf)
+		ADD_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
+	else
+		REMOVE_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
+	*/
 	if (!deaf)
 		REMOVE_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
 		REMOVE_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
@@ -72,6 +79,7 @@
 	else
 		ADD_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
 		REMOVE_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
+	// monkestation edit end
 
 /obj/item/organ/internal/ears/proc/adjustEarDamage(ddmg, ddeaf)
 	if(owner.status_flags & GODMODE)

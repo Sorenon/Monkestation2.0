@@ -64,17 +64,21 @@
 	else
 		//MMI stuff. Held togheter by magic. ~Miauw
 		if(!mmi?.brainmob)
-			// mmi = new (src)
-			// mmi.brain = new /obj/item/organ/internal/brain(mmi)
-			// mmi.brain.organ_flags |= ORGAN_FROZEN
-			// mmi.brain.name = "[real_name]'s brain"
-			// mmi.name = "[initial(mmi.name)]: [real_name]"
-			// mmi.set_brainmob(new /mob/living/brain(mmi))
-			// mmi.brainmob.name = src.real_name
-			// mmi.brainmob.real_name = src.real_name
-			// mmi.brainmob.container = mmi
-			// mmi.update_appearance()
+			// monkestation edit start
+			/* original
+			mmi = new (src)
+			mmi.brain = new /obj/item/organ/internal/brain(mmi)
+			mmi.brain.organ_flags |= ORGAN_FROZEN
+			mmi.brain.name = "[real_name]'s brain"
+			mmi.name = "[initial(mmi.name)]: [real_name]"
+			mmi.set_brainmob(new /mob/living/brain(mmi))
+			mmi.brainmob.name = src.real_name
+			mmi.brainmob.real_name = src.real_name
+			mmi.brainmob.container = mmi
+			mmi.update_appearance()
+			*/
 			mmi = make_mmi()
+			// monkestation edit end
 		setup_default_name()
 
 	aicamera = new/obj/item/camera/siliconcam/robot_camera(src)
