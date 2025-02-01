@@ -33,7 +33,7 @@ PROCESSING_SUBSYSTEM_DEF(quirks)
 		list("Social Anxiety", "Mute"),
 		list("Mute", "Soft-Spoken"),
 		list("Stormtrooper Aim", "Big Hands"),
-		// list("Bilingual", "Foreigner"), // Monkestation removal
+		//list("Bilingual", "Foreigner"), //monkestation edit, commented out
 		//might be fun to change this in the future. you can be a body purist but be forced to use implants regardless for medical reasons
 		list("Body Purist", "Hosed"),
 		list("Body Purist", "Neuralinked"),
@@ -41,6 +41,7 @@ PROCESSING_SUBSYSTEM_DEF(quirks)
 		list("Hypoalgesia","Hyperalgesia"),
 		list("Listener", "Uncommon"), // Monkestation addition
 		list("Species Outsider", "Uncommon"), // Monkestation addition
+		list("Kakologophobia", "Easily Offended"), //MONKESTATION ADDITION
 	)
 
 /datum/controller/subsystem/processing/quirks/Initialize()
@@ -75,7 +76,7 @@ PROCESSING_SUBSYSTEM_DEF(quirks)
 		hardcore_quirks[quirk_type] += hardcore_value
 
 // Monkestation edit - original: /datum/controller/subsystem/processing/quirks/proc/AssignQuirks(mob/living/user, client/applied_client)
-/datum/controller/subsystem/processing/quirks/proc/AssignQuirks(mob/living/user, client/applied_client, omit_negatives = FALSE, omit_positives = FALSE, omit_neutrals = FALSE)
+/datum/controller/subsystem/processing/quirks/proc/AssignQuirks(mob/living/user, client/applied_client, omit_negatives = FALSE, omit_positives = FALSE, omit_neutrals = FALSE, list/blacklist = list())
 	var/badquirk = FALSE
 	for(var/quirk_name in applied_client?.prefs?.all_quirks)
 		var/datum/quirk/quirk_type = quirks[quirk_name]
@@ -93,6 +94,8 @@ PROCESSING_SUBSYSTEM_DEF(quirks)
 				var/q_val = initial(quirk_type.value)
 				if (q_val == 0)
 					continue
+			if (quirk_type in blacklist)
+				continue
 			// monkestation end
 			if(user.add_quirk(quirk_type, override_client = applied_client))
 				SSblackbox.record_feedback("nested tally", "quirks_taken", 1, list("[quirk_name]"))
