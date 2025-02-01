@@ -1,6 +1,6 @@
 /datum/quirk/hard_of_hearing
 	name = "Hard Of Hearing"
-	desc = "You are incurably deaf."
+	desc = "Everyone sounds so quiet."
 	icon = FA_ICON_EAR_LISTEN
 	value = -4
 	mob_trait = TRAIT_HARD_OF_HEARING

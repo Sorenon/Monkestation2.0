@@ -1,7 +1,7 @@
 /datum/quirk/paralysed_limb
 	name = "Paralysed Limb"
 	desc = "You are unable to use one of your limbs."
-	icon = "tg-prosthetic-leg"
+	icon = FA_ICON_HANDSHAKE_SIMPLE_SLASH
 	value = -5 // half as bearable as hemipelgic
 	hardcore_value = 5
 	quirk_flags = QUIRK_HUMAN_ONLY | QUIRK_CHANGES_APPEARANCE

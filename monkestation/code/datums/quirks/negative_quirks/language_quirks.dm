@@ -18,16 +18,16 @@
 
 /datum/quirk/language_holder/uncommon
 	name = "Uncommon"
-	desc = "You don't understand Galactic Common, instead having learned Galactic Uncommon."
+	desc = "You don't understand Galactic Common, having instead learned Galactic Uncommon."
 	icon = FA_ICON_LANGUAGE
-	value = -4
+	value = -6
 	gain_text = span_notice("The words being spoken around you don't make any sense.")
 	lose_text = span_notice("You've developed fluency in Galactic Common.")
 	medical_record_text = "Patient does not understand Galactic Common and may require an interpreter."
 	mail_goodies = list(/obj/item/taperecorder) // for translation
 
 /datum/quirk/language_holder/outsider
-	name = "Species Outsider"
+	name = "Outsider"
 	desc = "You don't know your species' language."
 	icon = FA_ICON_LANGUAGE
 	value = -2
@@ -38,8 +38,8 @@
 /datum/quirk/language_holder/listener
 	name = "Listener"
 	desc = "You are unable to speak Galactic Common though you understand it just fine."
-	icon = FA_ICON_LANGUAGE
-	value = -2
+	icon = FA_ICON_VOLUME_LOW
+	value = -3
 	gain_text = span_notice("You don't know how to speak Galactic Common.")
 	lose_text = span_notice("You're able to speak Galactic Common.")
 	medical_record_text = "Patient does not speak Galactic Common and may require an interpreter."
