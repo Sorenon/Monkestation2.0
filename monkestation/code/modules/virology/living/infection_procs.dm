@@ -121,14 +121,14 @@
 /mob/living/proc/activate_diseases(seconds_per_tick, times_fired)
 	if (length(diseases))
 		var/active_disease = pick(diseases)//only one disease will activate its effects at a time.
-		for (var/datum/disease/acute/disease as anything in diseases)
+		for (var/datum/disease/disease as anything in diseases)
 			var/datum/disease/acute/acute_disease = disease
 			if(istype(acute_disease))
 				acute_disease.activate(src, active_disease != acute_disease, seconds_per_tick)
 
 				if(HAS_TRAIT(src, TRAIT_IRRADIATED))
 					if (prob(50))//radiation turns your body into an inefficient pathogenic incubator.
-						adv_disease.incubate(src, 1)
+						acute_disease.incubate(src, 1)
 						//effect mutations won't occur unless the mob also has ingested mutagen
 						//and even if they occur, the new effect will have a badness similar to the old one, so helpful pathogen won't instantly become deadly ones.
 			else if(istype(disease))
