@@ -39,7 +39,7 @@ PROCESSING_SUBSYSTEM_DEF(quirks)
 		list("Body Purist", "Neuralinked"),
 		list("Body Purist", "Bright Eyes"),
 		list("Hypoalgesia","Hyperalgesia"),
-		list("Paraplegic", "Hemiplegic", "Paralysed Limb") // Monkestation addition
+		list("Paraplegic", "Hemiplegic", "Paralysed Limb"), // Monkestation addition
 		list("Listener", "Uncommon"), // Monkestation addition
 		list("Species Outsider", "Uncommon"), // Monkestation addition
 		list("Deaf", "Hard Of Hearing"), // Monkestation addition
