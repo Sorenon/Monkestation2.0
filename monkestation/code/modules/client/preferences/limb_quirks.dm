@@ -1,6 +1,7 @@
 /datum/preference/choiced/limb
 	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
 	savefile_identifier = PREFERENCE_CHARACTER
+	abstract_type = /datum/preference/choiced/limb
 	var/quirk_name
 
 /datum/preference/choiced/limb/create_default_value()
@@ -31,6 +32,7 @@
 	category = PREFERENCE_CATEGORY_SECONDARY_FEATURES
 	savefile_identifier = PREFERENCE_CHARACTER
 	default_value = FALSE
+	abstract_type = /datum/preference/toggle/limb_missing
 	var/quirk_name
 
 /datum/preference/toggle/limb_missing/is_accessible(datum/preferences/preferences)

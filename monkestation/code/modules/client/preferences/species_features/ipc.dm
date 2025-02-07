@@ -103,7 +103,7 @@
 /datum/preference/choiced/ipc_brain/init_possible_values()
 	return list("Compact Positronic", "Compact MMI")
 
-/datum/preference/choiced/silicon_brain/create_default_value()
+/datum/preference/choiced/ipc_brain/create_default_value()
 	return "Compact Positronic"
 
 /datum/preference/choiced/ipc_brain/apply_to_human(mob/living/carbon/human/target, value)
