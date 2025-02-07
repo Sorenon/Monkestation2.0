@@ -18,7 +18,7 @@
 
 /datum/quirk/language_holder/uncommon
 	name = "Uncommon"
-	desc = "You don't understand Galactic Common, having instead learned Galactic Uncommon."
+	desc = "You don't understand Galactic Common having learned Galactic Uncommon instead."
 	icon = FA_ICON_LANGUAGE
 	value = -6
 	gain_text = span_notice("The words being spoken around you don't make any sense.")
@@ -29,7 +29,7 @@
 /datum/quirk/language_holder/outsider
 	name = "Outsider"
 	desc = "You don't know your species' language."
-	icon = FA_ICON_LANGUAGE
+	icon = FA_ICON_BAN
 	value = -2
 	gain_text = span_notice("You can't understand your species' language.")
 	lose_text = span_notice("You've remembered your species' language.")
@@ -38,7 +38,7 @@
 /datum/quirk/language_holder/listener
 	name = "Listener"
 	desc = "You are unable to speak Galactic Common though you understand it just fine."
-	icon = FA_ICON_VOLUME_LOW
+	icon = FA_ICON_EYE
 	value = -3
 	gain_text = span_notice("You don't know how to speak Galactic Common.")
 	lose_text = span_notice("You're able to speak Galactic Common.")
