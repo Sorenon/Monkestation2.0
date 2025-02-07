@@ -38,7 +38,7 @@
 /datum/quirk/language_holder/listener
 	name = "Listener"
 	desc = "You are unable to speak Galactic Common though you understand it just fine."
-	icon = FA_ICON_EYE
+	icon = FA_ICON_BELL_SLASH
 	value = -3
 	gain_text = span_notice("You don't know how to speak Galactic Common.")
 	lose_text = span_notice("You're able to speak Galactic Common.")
