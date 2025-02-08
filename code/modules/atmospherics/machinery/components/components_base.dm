@@ -293,3 +293,6 @@
 
 /obj/machinery/atmospherics/components/update_layer()
 	layer = initial(layer) + (piping_layer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_LCHANGE + (GLOB.pipe_colors_ordered[pipe_color] * 0.001)
+
+/obj/machinery/atmospherics/components/container_resist_act(mob/living/user)
+	INVOKE_ASYNC(user, TYPE_PROC_REF(/mob/living, handle_ventcrawl), src)

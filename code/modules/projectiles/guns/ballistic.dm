@@ -718,6 +718,11 @@ GLOBAL_LIST_INIT(gun_saw_types, typecacheof(list(
 	chamber_round()
 	update_appearance()
 
+/obj/item/gun/ballistic/handle_atom_del(atom/A)
+	if(istype(A, /obj/item/ammo_casing) && magazine)
+		magazine.handle_atom_del(A)
+	return ..()
+
 /obj/item/suppressor
 	name = "suppressor"
 	desc = "A syndicate small-arms suppressor for maximum espionage."
