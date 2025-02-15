@@ -73,14 +73,6 @@
 			else if(the_rcd.window_type  == /obj/structure/window/reinforced/fulltile)
 				cost = 12
 				delay = 4 SECONDS
-			// MONKESTATION EDIT START
-			else if(the_rcd.window_type  == /obj/structure/window)
-				cost = 4
-				delay = 2 SECONDS
-			else if(the_rcd.window_type  == /obj/structure/window/reinforced)
-				cost = 6
-				delay = 2.5 SECONDS
-			// MONKESTATION EDIT END
 			if(!cost)
 				return FALSE
 
@@ -109,10 +101,8 @@
 			var/obj/structure/window/window_path = the_rcd.window_type
 			if(!ispath(window_path))
 				CRASH("Invalid window path type in RCD: [window_path]")
-			/* MONKESTATION REMOVAL
 			if(!initial(window_path.fulltile)) //only fulltile windows can be built here
 				return FALSE
-			*/
 			var/obj/structure/window/WD = new the_rcd.window_type(T, user.dir)
 			WD.set_anchored(TRUE)
 			return TRUE
