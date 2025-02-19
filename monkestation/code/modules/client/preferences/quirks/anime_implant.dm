@@ -20,11 +20,11 @@
 		return FALSE
 
 	var/datum/preference_middleware/quirks/located = locate(/datum/preference_middleware/quirks) in preferences.middleware
-	if(!located)
+	if (!located)
 		return FALSE
 	var/list/quirks = located.get_selected_quirks()
-	for(var/item in quirks)
-		if(item == "Anime")
+	for (var/item in quirks)
+		if (item == "Anime")
 			return TRUE
 	return FALSE
 
@@ -69,8 +69,8 @@
 	if(!located)
 		return FALSE
 	var/list/quirks = located.get_selected_quirks()
-	for(var/item in quirks)
-		if(item == "Anime")
+	for (var/item in quirks)
+		if (item == "Anime")
 			return TRUE
 	return FALSE
 /datum/preference/choiced/anime_middle
@@ -121,11 +121,11 @@
 		return FALSE
 
 	var/datum/preference_middleware/quirks/located = locate(/datum/preference_middleware/quirks) in preferences.middleware
-	if(!located)
+	if (!located)
 		return FALSE
 	var/list/quirks = located.get_selected_quirks()
-	for(var/item in quirks)
-		if(item == "Anime")
+	for (var/item in quirks)
+		if (item == "Anime")
 			return TRUE
 	return FALSE
 
@@ -161,7 +161,7 @@
 	for (var/name in GLOB.anime_bottom_list)
 		var/datum/sprite_accessory/accessory = GLOB.anime_bottom_list[name]
 		if (accessory == null)
-			if(accessory.icon_state == null || accessory.icon_state == "none")
+			if (accessory.icon_state == null || accessory.icon_state == "none")
 				values[name] = icon('icons/mob/landmarks.dmi', "x")
 			continue
 
@@ -180,10 +180,10 @@
 		return FALSE
 
 	var/datum/preference_middleware/quirks/located = locate(/datum/preference_middleware/quirks) in preferences.middleware
-	if(!located)
+	if (!located)
 		return FALSE
 	var/list/quirks = located.get_selected_quirks()
-	for(var/item in quirks)
-		if(item == "Anime")
+	for (var/item in quirks)
+		if (item == "Anime")
 			return TRUE
 	return FALSE
