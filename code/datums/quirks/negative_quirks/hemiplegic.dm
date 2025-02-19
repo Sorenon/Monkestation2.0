@@ -1,4 +1,4 @@
-/* /datum/quirk/hemiplegic - monkestation disabled for now
+/datum/quirk/hemiplegic
 	name = "Hemiplegic"
 	desc = "Half of your body doesn't work. Nothing will ever fix this."
 	icon = FA_ICON_CIRCLE_HALF_STROKE
@@ -20,4 +20,3 @@
 /datum/quirk/hemiplegic/remove()
 	var/mob/living/carbon/human/human_holder = quirk_holder
 	human_holder.cure_trauma_type(/datum/brain_trauma/severe/paralysis/hemiplegic, TRAUMA_RESILIENCE_ABSOLUTE)
- */
