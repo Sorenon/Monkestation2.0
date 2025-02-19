@@ -14,13 +14,12 @@
 			return "left leg"
 		if (BODY_ZONE_R_LEG)
 			return "right leg"
-
 		if (BODY_ZONE_PRECISE_L_HAND)
-			return "left arm"
+			return "left hand"
 		if (BODY_ZONE_PRECISE_R_HAND)
-			return "right arm"
+			return "right hand"
 		if (BODY_ZONE_PRECISE_L_FOOT)
-			return "left leg"
+			return "left foot"
 		if (BODY_ZONE_PRECISE_R_FOOT)
-			return "right leg"
+			return "right foot"
 	return body_zone
