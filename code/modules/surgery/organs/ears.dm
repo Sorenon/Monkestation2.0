@@ -73,7 +73,7 @@
 		REMOVE_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
 		return
 
-	if (damage < low_threshold)
+	if (damage < high_threshold)
 		ADD_TRAIT(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE)
 		REMOVE_TRAIT(owner, TRAIT_DEAF, EAR_DAMAGE)
 	else
