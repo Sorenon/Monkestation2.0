@@ -8,8 +8,7 @@ GLOBAL_LIST_INIT(nearsighted_glasses, list(
 	"Thin" = /obj/item/clothing/glasses/regular/thin,
 ))
 
-
-///Options for the prothetic limb quirk to choose from
+///Options for the prosthetic limb quirk to choose from
 GLOBAL_LIST_INIT(limb_choice, list(
 // monkestation edit start
 /* original

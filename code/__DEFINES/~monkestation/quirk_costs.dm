@@ -10,7 +10,7 @@
 #define QUIRK_COST_HEMIPLEGIC -10
 #define QUIRK_HARDCORE_HEMIPLEGIC 10
 
-// almost half as bearable as hemipelgic
+// almost half as bearable as hemiplegic
 #define QUIRK_COST_MONOPLEGIC -6
 #define QUIRK_HARDCORE_MONOPLEGIC 6
 

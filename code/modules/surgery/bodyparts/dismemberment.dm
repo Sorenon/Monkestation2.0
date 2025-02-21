@@ -74,7 +74,6 @@
 
 ///limb removal. The "special" argument is used for swapping a limb with a new one without the effects of losing a limb kicking in.
 ///monkestation addition: "painless" argument
-///monkestation note: at the time of writing dismembered is always FALSE
 /obj/item/bodypart/proc/drop_limb(special, dismembered, violent = FALSE, painless = FALSE)
 	if(!owner)
 		return

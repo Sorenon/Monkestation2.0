@@ -23,3 +23,4 @@
 
 /datum/brain_trauma/severe/paralysis/limb
 	random_gain = FALSE
+	resilience = TRAUMA_RESILIENCE_ABSOLUTE
