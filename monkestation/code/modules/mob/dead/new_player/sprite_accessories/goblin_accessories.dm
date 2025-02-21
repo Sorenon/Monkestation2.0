@@ -24,7 +24,7 @@
 	palette = /datum/color_palette/generic_colors
 	palette_key = MUTANT_COLOR
 
-/datum/sprite_accessory/goblin_nose/none
+/datum/sprite_accessory/goblin_nose/small
 	name = "Small"
 	icon_state = "none"
 
