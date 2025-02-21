@@ -79,9 +79,9 @@
 		return
 	var/atom/drop_loc = owner.drop_location()
 
- 	// monkestation edit start
+	// monkestation edit start
 	SEND_SIGNAL(owner, COMSIG_CARBON_REMOVE_LIMB, src, dismembered, special, painless)
- 	// monkestation edit end
+	// monkestation edit end
 	SEND_SIGNAL(src, COMSIG_BODYPART_REMOVED, owner, dismembered)
 	update_limb(dropping_limb = TRUE)
 	//limb is out and about, it can't really be considered an implant
