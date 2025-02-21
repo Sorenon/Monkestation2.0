@@ -7,7 +7,7 @@ import {
 
 /* Limb Choice */
 export const prosthetic: FeatureChoiced = {
-  name: 'Prosthetic Limb',
+  name: 'Prosthetic',
   component: FeatureDropdownInput,
 };
 
@@ -19,7 +19,7 @@ export const monoplegic: FeatureChoiced = {
 /* Missing */
 
 export const prosthetic_missing: FeatureToggle = {
-  name: 'Prosthetic Limb Missing',
+  name: 'Prosthetic Missing',
   component: CheckboxInput,
 };
 

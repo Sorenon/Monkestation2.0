@@ -59,7 +59,7 @@
 	// monkestation edit start
 	if (missing)
 		to_chat(quirk_holder, span_boldannounce("Your [slot_string] is missing. This is nonpermanent and you may request a replacement from medical or robotics, though doing so at the \
-		beginning of every shift is could be considered a criminal misuse of company resources."))
+		beginning of every shift could be considered a criminal misuse of company resources."))
 		return
 	// monkestation edit end
 

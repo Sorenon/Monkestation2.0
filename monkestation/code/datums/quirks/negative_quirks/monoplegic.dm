@@ -7,14 +7,14 @@
 	quirk_flags = QUIRK_HUMAN_ONLY | QUIRK_CHANGES_APPEARANCE
 
 /datum/quirk/monoplegic/add_unique(client/client_source)
-	var/body_zone = GLOB.limb_choice[client_source?.prefs?.read_preference(/datum/preference/choiced/limb/paralysed)]
+	var/body_zone = GLOB.limb_choice[client_source?.prefs?.read_preference(/datum/preference/choiced/limb/monoplegic)]
 	if(isnull(body_zone))  //Client gone or they chose a random limb
 		body_zone = GLOB.limb_choice[pick(GLOB.limb_choice)]
 
 	var/mob/living/carbon/human/human_holder = quirk_holder
 	human_holder.gain_trauma(new /datum/brain_trauma/severe/paralysis/limb(body_zone), TRAUMA_RESILIENCE_ABSOLUTE)
 
-	if(client_source?.prefs?.read_preference(/datum/preference/toggle/limb_missing/paralysed))
+	if(client_source?.prefs?.read_preference(/datum/preference/toggle/limb_missing/monoplegic))
 		human_holder.remove_bodypart_painlessly(body_zone)
 
 /datum/quirk/monoplegic/remove()

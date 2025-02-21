@@ -27,7 +27,7 @@
 	savefile_key = "prosthetic"
 	quirk_name = "Prosthetic Limb"
 
-/datum/preference/choiced/limb/paralysed
+/datum/preference/choiced/limb/monoplegic
 	savefile_key = "monoplegic"
 	quirk_name = "Monoplegic"
 
@@ -55,7 +55,7 @@
 	savefile_key = "prosthetic_missing"
 	quirk_name = "Prosthetic Limb"
 
-/datum/preference/toggle/limb_missing/paralysed
+/datum/preference/toggle/limb_missing/monoplegic
 	savefile_key = "monoplegic_missing"
 	quirk_name = "Monoplegic"
 
