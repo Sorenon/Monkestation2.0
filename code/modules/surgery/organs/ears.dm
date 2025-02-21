@@ -84,7 +84,7 @@
 	// monkestation edit start
 	// if we are already hard of hearing, don't accumulate the duration
 	// instead adjust the amount of damage (so we might escalate to deafness) and reset the duration if appropriate
-	if(ddeaf > 0 && HAS_TRAIT_FROM(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE))
+	if (ddeaf > 0 && HAS_TRAIT_FROM(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE))
 		set_organ_damage(max(damage + (ddmg*damage_multiplier), 0))
 		deaf = max(deaf, ddeaf*damage_multiplier)
 		update_hearing_loss()

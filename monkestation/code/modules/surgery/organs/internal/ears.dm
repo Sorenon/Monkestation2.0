@@ -1,8 +1,8 @@
 /obj/item/organ/internal/ears/get_status_appendix(advanced, add_tooltips)
-	if(owner.stat == DEAD)
+	if (owner.stat == DEAD)
 		return
-	if(advanced)
-		if(HAS_TRAIT_FROM(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE))
+	if (advanced)
+		if (HAS_TRAIT_FROM(owner, TRAIT_HARD_OF_HEARING, EAR_DAMAGE))
 			return "Subject is temporarily hard of hearing from ear damage."
 	return ..()
 

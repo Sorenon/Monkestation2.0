@@ -169,7 +169,7 @@ GLOBAL_LIST_EMPTY(cached_mixer_channels)
 		sound_to_use.volume *= 0
 
 	// monkestation edit start
-	if(HAS_TRAIT_FROM(src, TRAIT_HARD_OF_HEARING, EAR_DAMAGE))
+	if (HAS_TRAIT_FROM(src, TRAIT_HARD_OF_HEARING, EAR_DAMAGE))
 		sound_to_use.volume *= 0.1
 	// monkestation edit end
 
