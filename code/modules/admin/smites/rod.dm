@@ -2,11 +2,15 @@
 /datum/smite/rod
 	name = "Immovable Rod"
 	var/force_looping = FALSE
+	var/homeing = FALSE
 
 /datum/smite/rod/configure(client/user)
 	var/loop_input = tgui_alert(usr,"Would you like this rod to force-loop across space z-levels?", "Loopy McLoopface", list("Yes", "No"))
+	var/homeing_input = tgui_alert(usr,"Would you like this rod to home in on its target?", ":)", list("Yes", "No"))
+
 
 	force_looping = (loop_input == "Yes")
+	homeing = (homeing_input == "Yes")
 
 /datum/smite/rod/effect(client/user, mob/living/target)
 	. = ..()
