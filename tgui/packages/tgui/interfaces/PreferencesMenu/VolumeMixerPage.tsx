@@ -7,10 +7,10 @@ export const VolumeMixerPage = () => {
   const { channels } = data;
 
   return (
-    <Section title="Volume Mixers" overflow="auto">
+    <Section title="Volume Mixers" overflowY="scroll" maxHeight="100%">
       <Stack align="start" direction="row" wrap>
         {channels.map((channel) => (
-          <Stack.Item key={channel.num} width={28} style={{ margin: '5px' }}>
+          <Stack.Item key={channel.num} width={28} style={{ margin: '2px' }}>
             <VolumeSlider channel={channel} />
           </Stack.Item>
         ))}
